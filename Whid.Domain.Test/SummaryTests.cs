@@ -63,5 +63,53 @@ namespace Whid.Domain.Test
         {
             Assert.Equal(expectedDays, _allMonths.InRange(dateRange).Count());
         }
+
+        [Fact]
+        public void OfType_DailyType()
+        {
+            Assert.Equal(365, _allDays.OfSummaryType(SummaryType.DailySummary).Count());
+            Assert.Empty(_allWeeks.OfSummaryType(SummaryType.DailySummary));
+            Assert.Empty(_allMonths.OfSummaryType(SummaryType.DailySummary));
+        }
+
+        [Fact]
+        public void OfType_WeeklyType()
+        {
+            Assert.Empty(_allDays.OfSummaryType(SummaryType.WeeklySummary));
+            Assert.Equal(52, _allWeeks.OfSummaryType(SummaryType.WeeklySummary).Count());
+            Assert.Empty(_allMonths.OfSummaryType(SummaryType.WeeklySummary));
+        }
+
+        [Fact]
+        public void OfType_MonthlyType()
+        {
+            Assert.Empty(_allDays.OfSummaryType(SummaryType.MonthlySummary));
+            Assert.Empty(_allWeeks.OfSummaryType(SummaryType.MonthlySummary));
+            Assert.Equal(12, _allMonths.OfSummaryType(SummaryType.MonthlySummary).Count());
+        }
+
+        [Fact]
+        public void SummarizedBy_DailySummary()
+        {
+            Assert.Empty(_allDays.SummarizedBy(SummaryType.DailySummary));
+            Assert.Empty(_allWeeks.SummarizedBy(SummaryType.DailySummary));
+            Assert.Empty(_allMonths.SummarizedBy(SummaryType.DailySummary));
+        }
+
+        [Fact]
+        public void SummarizedBy_WeeklySummary()
+        {
+            Assert.Equal(365, _allDays.SummarizedBy(SummaryType.WeeklySummary).Count());
+            Assert.Empty(_allWeeks.SummarizedBy(SummaryType.WeeklySummary));
+            Assert.Empty(_allMonths.SummarizedBy(SummaryType.WeeklySummary));
+        }
+
+        [Fact]
+        public void SummarizedBy_MonthlySummary()
+        {
+            Assert.Empty(_allDays.SummarizedBy(SummaryType.MonthlySummary));
+            Assert.Equal(52, _allWeeks.SummarizedBy(SummaryType.MonthlySummary).Count());
+            Assert.Empty(_allMonths.SummarizedBy(SummaryType.MonthlySummary));
+        }
     }
 }

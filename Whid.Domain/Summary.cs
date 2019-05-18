@@ -9,9 +9,9 @@ namespace Whid.Domain
         public IDateRange Period { get; }
         public string Content { get; }
 
-        public string Type { get; }
+        public SummaryType Type { get; }
 
-        private Summary(IDateRange period, string type, string content)
+        private Summary(IDateRange period, SummaryType type, string content)
         {
             Id = Guid.NewGuid();
             Period = period ?? throw new ArgumentNullException(nameof(period));
@@ -20,12 +20,12 @@ namespace Whid.Domain
         }
 
         public static Summary DailySummary(Date date, string content) =>
-            new Summary(date.SingleDayRange(), "Daily summary", content);
+            new Summary(date.SingleDayRange(), SummaryType.DailySummary, content);
 
         public static Summary WeeklySummary(Date startDate, string content) =>
-            new Summary(startDate.RangeFromWeeks(1), "Weekly summary", content);
+            new Summary(startDate.RangeFromWeeks(1), SummaryType.WeeklySummary, content);
 
         public static Summary MonthlySummary(Month month, string content) =>
-            new Summary(month.SingleMonthRange(), "Monthly summary", content);
+            new Summary(month.SingleMonthRange(), SummaryType.MonthlySummary, content);
     }
 }
