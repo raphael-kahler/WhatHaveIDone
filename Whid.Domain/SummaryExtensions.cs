@@ -12,7 +12,7 @@ namespace Whid.Domain
         /// <param name="summaries">The collection of summaries.</param>
         /// <param name="dateRange">The specified date range.</param>
         /// <returns>All summaries that are at least partially included in the date range.</returns>
-        public static IEnumerable<Summary> InRange(this IEnumerable<Summary> summaries, DateRange dateRange) =>
+        public static IEnumerable<Summary> InRange(this IEnumerable<Summary> summaries, IDateRange dateRange) =>
             summaries.Where(summary => dateRange.PartiallyIncludesDateRange(summary.Period));
 
         /// <summary>
@@ -28,9 +28,19 @@ namespace Whid.Domain
         /// Filter a collection of summaries to include only those which are summarized by the specified summary type.
         /// </summary>
         /// <param name="summaries">The collection of summaries.</param>
-        /// <param name="summaryType">The summary type that should summarize the the summaries.</param>
+        /// <param name="summaryType">The summary type that should summarize the summaries.</param>
         /// <returns>All summaries of the type which is summarized by the specified summary type.</returns>
         public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, SummaryType summaryType) =>
             summaries.Where(summary => summaryType.Summarizes(summary.Type));
+
+        /// <summary>
+        /// Filter a collection of summaries to include only those which are summarized by the specified summary.
+        /// This means that the selected summaries are included in the date range of the specified summary and are summarized by the type of the specified summary.
+        /// </summary>
+        /// <param name="summaries">The collection of summaries.</param>
+        /// <param name="summaryType">The summary that should summarize the summaries.</param>
+        /// <returns>All summaries of the type which is summarized by the specified summary.</returns>
+        public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, Summary summary) =>
+            summaries.SummarizedBy(summary.Type).InRange(summary.Period);
     }
 }

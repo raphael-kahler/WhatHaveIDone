@@ -111,5 +111,23 @@ namespace Whid.Domain.Test
             Assert.Equal(52, _allWeeks.SummarizedBy(SummaryType.MonthlySummary).Count());
             Assert.Empty(_allMonths.SummarizedBy(SummaryType.MonthlySummary));
         }
+
+        public static IEnumerable<object[]> SummarizedBy_SpecificSummary_Inputs()
+        {
+            yield return new object[] { Summary.DailySummary(new Date(2019, 1, 1), "content"), 0, 0, 0 };
+            yield return new object[] { Summary.WeeklySummary(new Date(2019, 1, 1), "content"), 7, 0, 0 };
+            yield return new object[] { Summary.MonthlySummary(new Month(2019, 1), "content"), 0, 5, 0 };
+            yield return new object[] { Summary.WeeklySummary(new Date(2020, 1, 1), "content"), 0, 0, 0 };
+            yield return new object[] { Summary.MonthlySummary(new Month(2020, 1), "content"), 0, 0, 0 };
+        }
+
+        [Theory]
+        [MemberData(nameof(SummarizedBy_SpecificSummary_Inputs))]
+        public void SummarizedBy_SpecificSummary(Summary summary, int days, int weeks, int months)
+        {
+            Assert.Equal(days, _allDays.SummarizedBy(summary).Count());
+            Assert.Equal(weeks, _allWeeks.SummarizedBy(summary).Count());
+            Assert.Equal(months, _allMonths.SummarizedBy(summary).Count());
+        }
     }
 }
