@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whid.Domain", "Whid.Domain\Whid.Domain.csproj", "{D767A19D-891B-46B2-9850-645D8C9D0AC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whid.Domain", "Whid.Domain\Whid.Domain.csproj", "{D767A19D-891B-46B2-9850-645D8C9D0AC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whid.Domain.Test", "Whid.Domain.Test\Whid.Domain.Test.csproj", "{301AABC7-2D6A-42D2-BBC0-040387B820D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Whid.Domain.Test", "Whid.Domain.Test\Whid.Domain.Test.csproj", "{301AABC7-2D6A-42D2-BBC0-040387B820D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whid.Framework", "Whid.Framework\Whid.Framework.csproj", "{FA73F731-CC79-4338-8C83-09DBB3D9733D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whid.Functional", "Whid.Functional\Whid.Functional.csproj", "{DD7CDCF5-A1B5-4ECF-8BBD-34AA6368C155}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{301AABC7-2D6A-42D2-BBC0-040387B820D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{301AABC7-2D6A-42D2-BBC0-040387B820D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{301AABC7-2D6A-42D2-BBC0-040387B820D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA73F731-CC79-4338-8C83-09DBB3D9733D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA73F731-CC79-4338-8C83-09DBB3D9733D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA73F731-CC79-4338-8C83-09DBB3D9733D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA73F731-CC79-4338-8C83-09DBB3D9733D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD7CDCF5-A1B5-4ECF-8BBD-34AA6368C155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD7CDCF5-A1B5-4ECF-8BBD-34AA6368C155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD7CDCF5-A1B5-4ECF-8BBD-34AA6368C155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD7CDCF5-A1B5-4ECF-8BBD-34AA6368C155}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
