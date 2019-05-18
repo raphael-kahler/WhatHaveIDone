@@ -11,7 +11,18 @@
                   ItemsSource="{Binding Summaries}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Content}"/>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="5">
+                            <TextBlock Text="{Binding Type}"/>
+                            <TextBlock Text=" ("/>
+                            <TextBlock Text="{Binding Period.StartTime}"/>
+                            <TextBlock Text=" - "/>
+                            <TextBlock Text="{Binding Period.EndTime}"/>
+                            <TextBlock Text=")"/>
+                        </StackPanel>                    
+                        <TextBlock Text="{Binding Content}"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

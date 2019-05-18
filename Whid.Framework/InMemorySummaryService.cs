@@ -13,14 +13,21 @@ namespace Whid.Framework
 
         static InMemorySummaryService()
         {
+            var startDate = new Date(2019, 1, 1);
+
             Enumerable
-                .Range(1, 31)
-                .Select(day => new Summary(new Date(2019, 1, day).SingleDayRange(), $"What I did on day {day}"))
+                .Range(1, 365)
+                .Select(day => Summary.DailySummary(startDate.AddDays(day - 1), $"What I did on day {day}"))
                 .ForEach(summary => _store.Add(summary.Id, summary));
 
             Enumerable
-                .Range(1, 5)
-                .Select(week => new Summary(new Date(2019, 1, 1 + 7 * (week - 1)).RangeFromWeeks(1), $"What I did in week {week}"))
+                .Range(1, 52)
+                .Select(week => Summary.WeeklySummary(startDate.AddDays(7 * (week - 1)), $"What I did in week {week}"))
+                .ForEach(summary => _store.Add(summary.Id, summary));
+
+            Enumerable
+                .Range(1, 12)
+                .Select(month => Summary.MonthlySummary(((Month)startDate).AddMonths(month - 1), $"What I did in month {month}"))
                 .ForEach(summary => _store.Add(summary.Id, summary));
         }
 

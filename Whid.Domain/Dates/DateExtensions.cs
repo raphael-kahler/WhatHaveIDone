@@ -22,7 +22,11 @@
         public static DateRange RangeFromDays(this Date date, int numDays) =>
             new DateRange(date, date.AddDays(numDays - 1));
 
-
+        /// <summary>
+        /// Create a DateRange that is one day long and ends on the same day that it starts.
+        /// </summary>
+        /// <param name="date">The start date, which is equal to the end date.</param>
+        /// <returns>The created DateRange.</returns>
         public static DateRange SingleDayRange(this Date date) =>
             new DateRange(date, date);
     }

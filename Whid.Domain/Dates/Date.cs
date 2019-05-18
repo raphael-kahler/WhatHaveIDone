@@ -14,10 +14,9 @@ namespace Whid.Domain.Dates
             (Date)Value.AddDays(daysToAdd);
 
 
-        public static explicit operator Date(DateTime date) => new Date(date.Year, date.Month, date.Day);
-
         public static implicit operator DateTime(Date date) => date.Value;
-
+        public static explicit operator Date(DateTime date) => new Date(date.Year, date.Month, date.Day);
+        public static explicit operator Month(Date date) => new Month(date.Value.Year, date.Value.Month);
 
         public static bool operator ==(Date left, Date right) => EqualityComparer<Date>.Default.Equals(left, right);
         public static bool operator !=(Date left, Date right) => !(left == right);

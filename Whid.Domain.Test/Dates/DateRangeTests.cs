@@ -115,5 +115,15 @@ namespace Whid.Domain.Test.Dates
             DateRange sut = new Date(1000, 1, 1).RangeFromWeeks(weeks);
             Assert.Equal(TimeSpan.FromDays(durationInDays), sut.GetDuration());
         }
+
+        [Theory]
+        [InlineData(2020, 1, 31)]
+        [InlineData(2020, 2, 29)]
+        [InlineData(2021, 2, 28)]
+        public void DurationInDays_CreatedUsingSingleMonthRange(int year, int month, int durationInDays)
+        {
+            DateRange sut = new Month(year, month).SingleMonthRange();
+            Assert.Equal(TimeSpan.FromDays(durationInDays), sut.GetDuration());
+        }
     }
 }
