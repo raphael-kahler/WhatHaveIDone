@@ -5,15 +5,16 @@ using System.Linq;
 using System.Windows;
 using Whid.Domain;
 using Whid.Framework;
+using Whid.Functional;
 
 namespace Whid
 {
     internal class MainWindowViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         private PeriodOrdering _periodOrdering;
         private ISummaryService _service;
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         private PeriodType mainSummaryType;
         public PeriodType MainSummaryType
@@ -43,8 +44,8 @@ namespace Whid
             }
         }
 
-        private ObservableCollection<Summary> summaries;
-        public ObservableCollection<Summary> Summaries
+        private ObservableCollection<SummaryModel> summaries;
+        public ObservableCollection<SummaryModel> Summaries
         {
             get => summaries;
             set
@@ -57,9 +58,9 @@ namespace Whid
             }
         }
 
-        private ObservableCollection<Summary> summarizedSummaries;
+        private ObservableCollection<SummaryModel> summarizedSummaries;
 
-        public ObservableCollection<Summary> SummarizedSummaries
+        public ObservableCollection<SummaryModel> SummarizedSummaries
         {
             get => summarizedSummaries;
             set
@@ -72,9 +73,24 @@ namespace Whid
             }
         }
 
-        //public IEnumerable<Summary> NextSummaries { get; set; }
-
-        //public Summary SelectedSummary { get; set; }
+        private SummaryModel selectedSummary;
+        public SummaryModel SelectedSummary
+        {
+            get => selectedSummary;
+            set
+            {
+                if (value != selectedSummary)
+                {
+                    selectedSummary = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedSummary)));
+                    if (null != selectedSummary)
+                    {
+                        SummarizedSummaries
+                            .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
+                    }
+                }
+            }
+        }
 
         private Visibility biggerSummaryTypeVisibility;
         public Visibility BiggerSummaryTypeVisibility
@@ -104,17 +120,12 @@ namespace Whid
             }
         }
 
-
-
         public MainWindowViewModel(ISummaryService service)
         {
             _service = service;
             _periodOrdering = new PeriodOrdering(new List<PeriodTypeEnum> { PeriodTypeEnum.Day, PeriodTypeEnum.Week, PeriodTypeEnum.Month });
 
             ShowSummaries(PeriodTypeEnum.Month);
-
-            //SelectedSummary = Summaries.OfSummaryType(SummaryType.MonthlySummary).First();
-            //SummarizedSummaries = Summaries.SummarizedBy(SelectedSummary);
         }
 
         private void ShowSummaries(PeriodTypeEnum type)
@@ -126,8 +137,8 @@ namespace Whid
             SmallerSummaryTypeVisibility = _periodOrdering.SummarizesOthers(NextSummaryType.Type) ? Visibility.Visible : Visibility.Hidden;
 
             var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
-            Summaries = new ObservableCollection<Summary>(allSummaries.OfSummaryType(MainSummaryType));
-            SummarizedSummaries = new ObservableCollection<Summary>(allSummaries.OfSummaryType(NextSummaryType));
+            Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => new SummaryModel { Summary = s }));
+            SummarizedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(NextSummaryType).Select(s => new SummaryModel { Summary = s }));
         }
 
         internal void ShowSmallerSummaries()

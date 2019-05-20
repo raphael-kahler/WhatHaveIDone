@@ -7,19 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
+        <Style x:Key="SummaryViewStyle"
+               TargetType="{x:Type Border}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Highlighted}" Value="true">
+                    <Setter Property="Background" Value="PapayaWhip"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <DataTemplate x:Key="SummaryViewTemplate">
             <Border BorderThickness="1"
-                            BorderBrush="Gray">
-                <StackPanel Orientation="Vertical"
-                                    Margin="4">
+                    Style="{StaticResource SummaryViewStyle}"
+                    BorderBrush="Gray">
+                <StackPanel 
+                            Orientation="Vertical"
+                            Margin="4">
                     <Grid>
-                        <TextBlock Text="{Binding Period.FormatString}"/>
+                        <TextBlock Text="{Binding Summary.Period.FormatString}"/>
                         <Button Content="..."
-                                        Padding="4,0"
-                                        Visibility="Visible"
-                                        HorizontalAlignment="Right"/>
+                                Padding="4,0"
+                                Visibility="Visible"
+                                HorizontalAlignment="Right"/>
                     </Grid>
-                    <TextBlock Text="{Binding Content}"/>
+                    <TextBlock Text="{Binding Summary.Content}"/>
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -62,8 +72,9 @@
         <ListView x:Name="SummaryListView"
                   Grid.Row="1" Grid.Column="0"
                   HorizontalContentAlignment="Stretch"
+                  ItemsSource="{Binding Summaries}"
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
-                  ItemsSource="{Binding Summaries}"/>
+                  SelectedItem="{Binding SelectedSummary}"/>
         <ListView x:Name="SummarizedSummaryListView"
                   Grid.Row="1" Grid.Column="1"
                   HorizontalContentAlignment="Stretch"

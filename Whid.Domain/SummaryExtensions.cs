@@ -7,6 +7,15 @@ namespace Whid.Domain
     public static class SummaryExtensions
     {
         /// <summary>
+        /// Check if the current summary summarizes a specified other summary.
+        /// </summary>
+        /// <param name="summary">The current summary.</param>
+        /// <param name="other">The specified other summary.</param>
+        /// <returns>True if the current summary summarizes the specified other summary, false otherwise.</returns>
+        public static bool Summarizes(this Summary summary, Summary other) =>
+            summary.Period.Type.Summarizes(other.Period.Type) && summary.Period.DateRange.PartiallyIncludesDateRange(other.Period.DateRange);
+
+        /// <summary>
         /// Filter a collection of summaries to include only those whose dates are at least partially included in the specified date range.
         /// </summary>
         /// <param name="summaries">The collection of summaries.</param>
