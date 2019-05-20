@@ -87,7 +87,23 @@ namespace Whid
                     {
                         SummarizedSummaries
                             .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
+
+                        FirstHighlightedSummary = SummarizedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
                     }
+                }
+            }
+        }
+
+        private SummaryModel firstHighlightedSummary;
+        public SummaryModel FirstHighlightedSummary
+        {
+            get => firstHighlightedSummary;
+            set
+            {
+                if (value != firstHighlightedSummary)
+                {
+                    firstHighlightedSummary = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FirstHighlightedSummary)));
                 }
             }
         }

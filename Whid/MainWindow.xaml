@@ -78,6 +78,9 @@
         <ListView x:Name="SummarizedSummaryListView"
                   Grid.Row="1" Grid.Column="1"
                   HorizontalContentAlignment="Stretch"
+                  IsSynchronizedWithCurrentItem="True"
+                  SelectionChanged="BringSelectionIntoView"
+                  SelectedItem="{Binding FirstHighlightedSummary}"
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
                   ItemsSource="{Binding SummarizedSummaries}"/>
     </Grid>

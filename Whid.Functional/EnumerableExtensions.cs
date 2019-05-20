@@ -23,9 +23,11 @@ namespace Whid.Functional
         /// <typeparam name="T">The type of the elements.</typeparam>
         /// <param name="elements">The collection of elements.</param>
         /// <param name="action">The action to execute on each element.</param>
-        public static void ForEach<T>(this IEnumerable<T> elements, Action<T> action)
+        /// <returns>The original collection of elements.</returns>
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> elements, Action<T> action)
         {
             foreach (T element in elements) { action(element); }
+            return elements;
         }
     }
 }
