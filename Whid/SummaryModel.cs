@@ -1,38 +1,22 @@
-﻿using System.ComponentModel;
-using Whid.Domain;
+﻿using Whid.Domain;
+using Whid.ViewModels;
 
 namespace Whid
 {
-    public class SummaryModel : INotifyPropertyChanged
+    public class SummaryModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
         private Summary summary;
         public Summary Summary
         {
             get => summary;
-            set
-            {
-                if (value != summary)
-                {
-                    summary = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Summary)));
-                }
-            }
+            set => SetProperty(ref summary, value);
         }
 
         private bool highlighted;
         public bool Highlighted
         {
             get => highlighted;
-            set
-            {
-                if (value != highlighted)
-                {
-                    highlighted = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Highlighted)));
-                }
-            }
+            set => SetProperty(ref highlighted, value);
         }
     }
 }

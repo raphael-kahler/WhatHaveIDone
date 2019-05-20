@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using Whid.Domain;
 using Whid.Framework;
 using Whid.Functional;
+using Whid.ViewModels;
 
 namespace Whid
 {
-    internal class MainWindowViewModel : INotifyPropertyChanged
+    internal class MainWindowViewModel : BaseViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
         private PeriodOrdering _periodOrdering;
         private ISummaryService _service;
 
@@ -20,57 +18,28 @@ namespace Whid
         public PeriodType MainSummaryType
         {
             get => mainSummaryType;
-            set
-            {
-                if (value != mainSummaryType)
-                {
-                    mainSummaryType = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(MainSummaryType)));
-                }
-            }
+            set => SetProperty(ref mainSummaryType, value);
         }
 
         private PeriodType nextSummaryType;
         public PeriodType NextSummaryType
         {
             get => nextSummaryType;
-            set
-            {
-                if (value != nextSummaryType)
-                {
-                    nextSummaryType = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(NextSummaryType)));
-                }
-            }
+            set => SetProperty(ref nextSummaryType, value);
         }
 
         private ObservableCollection<SummaryModel> summaries;
         public ObservableCollection<SummaryModel> Summaries
         {
             get => summaries;
-            set
-            {
-                if (value != summaries)
-                {
-                    summaries = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(Summaries)));
-                }
-            }
+            set => SetProperty(ref summaries, value);
         }
 
         private ObservableCollection<SummaryModel> summarizedSummaries;
-
         public ObservableCollection<SummaryModel> SummarizedSummaries
         {
             get => summarizedSummaries;
-            set
-            {
-                if (value != summarizedSummaries)
-                {
-                    summarizedSummaries = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(SummarizedSummaries)));
-                }
-            }
+            set => SetProperty(ref summarizedSummaries, value);
         }
 
         private SummaryModel selectedSummary;
@@ -79,17 +48,13 @@ namespace Whid
             get => selectedSummary;
             set
             {
-                if (value != selectedSummary)
+                bool wasSet = SetProperty(ref selectedSummary, value);
+                if (wasSet && null != selectedSummary)
                 {
-                    selectedSummary = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(SelectedSummary)));
-                    if (null != selectedSummary)
-                    {
-                        SummarizedSummaries
-                            .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
+                    SummarizedSummaries
+                        .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
 
-                        FirstHighlightedSummary = SummarizedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
-                    }
+                    FirstHighlightedSummary = SummarizedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
                 }
             }
         }
@@ -98,42 +63,21 @@ namespace Whid
         public SummaryModel FirstHighlightedSummary
         {
             get => firstHighlightedSummary;
-            set
-            {
-                if (value != firstHighlightedSummary)
-                {
-                    firstHighlightedSummary = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(FirstHighlightedSummary)));
-                }
-            }
+            set => SetProperty(ref firstHighlightedSummary, value);
         }
 
         private Visibility biggerSummaryTypeVisibility;
         public Visibility BiggerSummaryTypeVisibility
         {
             get => biggerSummaryTypeVisibility;
-            set
-            {
-                if (value != biggerSummaryTypeVisibility)
-                {
-                    biggerSummaryTypeVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(BiggerSummaryTypeVisibility)));
-                }
-            }
+            set => SetProperty(ref biggerSummaryTypeVisibility, value);
         }
 
         private Visibility smallerSummaryTypeVisibility;
         public Visibility SmallerSummaryTypeVisibility
         {
             get => smallerSummaryTypeVisibility;
-            set
-            {
-                if (value != smallerSummaryTypeVisibility)
-                {
-                    smallerSummaryTypeVisibility = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(SmallerSummaryTypeVisibility)));
-                }
-            }
+            set => SetProperty(ref smallerSummaryTypeVisibility, value);
         }
 
         public MainWindowViewModel(ISummaryService service)
