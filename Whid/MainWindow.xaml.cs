@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Whid.Framework;
+using Whid.Framework.DB;
 
 namespace Whid
 {
@@ -14,7 +16,17 @@ namespace Whid
         {
             InitializeComponent();
 
-            DataContext = _viewModel = new MainWindowViewModel(new InMemorySummaryService());
+            DataContext = _viewModel = new MainWindowViewModel(new DbSummaryService(@"D:\temp\whid.db"));
+        }
+
+        private void ShowBiggerSummaries(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ShowBiggerSummaries();
+        }
+
+        private void ShowSmallerSummaries(object sender, RoutedEventArgs e)
+        {
+            _viewModel.ShowSmallerSummaries();
         }
     }
 }

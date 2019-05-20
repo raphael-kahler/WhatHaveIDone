@@ -6,26 +6,23 @@ namespace Whid.Domain
     public class Summary
     {
         public Guid Id { get; }
-        public IDateRange Period { get; }
+        public SummaryPeriod Period { get; }
         public string Content { get; }
 
-        public SummaryType Type { get; }
-
-        private Summary(IDateRange period, SummaryType type, string content)
+        public Summary(Guid id, SummaryPeriod period, string content)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Period = period ?? throw new ArgumentNullException(nameof(period));
-            Type = type ?? throw new ArgumentNullException(nameof(type));
             Content = content ?? throw new ArgumentNullException(nameof(content));
         }
 
         public static Summary DailySummary(Date date, string content) =>
-            new Summary(date.SingleDayRange(), SummaryType.DailySummary, content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.DailySummary, date.SingleDayRange()), content);
 
         public static Summary WeeklySummary(Date startDate, string content) =>
-            new Summary(startDate.RangeFromWeeks(1), SummaryType.WeeklySummary, content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.WeeklySummary, startDate.RangeFromWeeks(1)), content);
 
         public static Summary MonthlySummary(Month month, string content) =>
-            new Summary(month.SingleMonthRange(), SummaryType.MonthlySummary, content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.MonthlySummary, month.SingleMonthRange()), content);
     }
 }

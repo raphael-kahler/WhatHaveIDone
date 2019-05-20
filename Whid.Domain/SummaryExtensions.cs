@@ -12,8 +12,8 @@ namespace Whid.Domain
         /// <param name="summaries">The collection of summaries.</param>
         /// <param name="dateRange">The specified date range.</param>
         /// <returns>All summaries that are at least partially included in the date range.</returns>
-        public static IEnumerable<Summary> InRange(this IEnumerable<Summary> summaries, IDateRange dateRange) =>
-            summaries.Where(summary => dateRange.PartiallyIncludesDateRange(summary.Period));
+        public static IEnumerable<Summary> InRange(this IEnumerable<Summary> summaries, DateRange dateRange) =>
+            summaries.Where(summary => dateRange.PartiallyIncludesDateRange(summary.Period.DateRange));
 
         /// <summary>
         /// Filter a collection of summaries to include only those which are of the specified summary type.
@@ -21,8 +21,8 @@ namespace Whid.Domain
         /// <param name="summaries">The collection of summaries.</param>
         /// <param name="summaryType">The summary type of summaries to include in the result.</param>
         /// <returns>All summaries that are of the specified type.</returns>
-        public static IEnumerable<Summary> OfSummaryType(this IEnumerable<Summary> summaries, SummaryType summaryType) =>
-            summaries.Where(summary => summary.Type.Equals(summaryType));
+        public static IEnumerable<Summary> OfSummaryType(this IEnumerable<Summary> summaries, PeriodType summaryType) =>
+            summaries.Where(summary => summary.Period.Type.Equals(summaryType));
 
         /// <summary>
         /// Filter a collection of summaries to include only those which are summarized by the specified summary type.
@@ -30,8 +30,8 @@ namespace Whid.Domain
         /// <param name="summaries">The collection of summaries.</param>
         /// <param name="summaryType">The summary type that should summarize the summaries.</param>
         /// <returns>All summaries of the type which is summarized by the specified summary type.</returns>
-        public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, SummaryType summaryType) =>
-            summaries.Where(summary => summaryType.Summarizes(summary.Type));
+        public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, PeriodType summaryType) =>
+            summaries.Where(summary => summaryType.Summarizes(summary.Period.Type));
 
         /// <summary>
         /// Filter a collection of summaries to include only those which are summarized by the specified summary.
@@ -41,6 +41,6 @@ namespace Whid.Domain
         /// <param name="summaryType">The summary that should summarize the summaries.</param>
         /// <returns>All summaries of the type which is summarized by the specified summary.</returns>
         public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, Summary summary) =>
-            summaries.SummarizedBy(summary.Type).InRange(summary.Period);
+            summaries.SummarizedBy(summary.Period.Type).InRange(summary.Period.DateRange);
     }
 }

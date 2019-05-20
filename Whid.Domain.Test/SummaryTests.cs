@@ -67,49 +67,49 @@ namespace Whid.Domain.Test
         [Fact]
         public void OfType_DailyType()
         {
-            Assert.Equal(365, _allDays.OfSummaryType(SummaryType.DailySummary).Count());
-            Assert.Empty(_allWeeks.OfSummaryType(SummaryType.DailySummary));
-            Assert.Empty(_allMonths.OfSummaryType(SummaryType.DailySummary));
+            Assert.Equal(365, _allDays.OfSummaryType(PeriodType.DailySummary).Count());
+            Assert.Empty(_allWeeks.OfSummaryType(PeriodType.DailySummary));
+            Assert.Empty(_allMonths.OfSummaryType(PeriodType.DailySummary));
         }
 
         [Fact]
         public void OfType_WeeklyType()
         {
-            Assert.Empty(_allDays.OfSummaryType(SummaryType.WeeklySummary));
-            Assert.Equal(52, _allWeeks.OfSummaryType(SummaryType.WeeklySummary).Count());
-            Assert.Empty(_allMonths.OfSummaryType(SummaryType.WeeklySummary));
+            Assert.Empty(_allDays.OfSummaryType(PeriodType.WeeklySummary));
+            Assert.Equal(52, _allWeeks.OfSummaryType(PeriodType.WeeklySummary).Count());
+            Assert.Empty(_allMonths.OfSummaryType(PeriodType.WeeklySummary));
         }
 
         [Fact]
         public void OfType_MonthlyType()
         {
-            Assert.Empty(_allDays.OfSummaryType(SummaryType.MonthlySummary));
-            Assert.Empty(_allWeeks.OfSummaryType(SummaryType.MonthlySummary));
-            Assert.Equal(12, _allMonths.OfSummaryType(SummaryType.MonthlySummary).Count());
+            Assert.Empty(_allDays.OfSummaryType(PeriodType.MonthlySummary));
+            Assert.Empty(_allWeeks.OfSummaryType(PeriodType.MonthlySummary));
+            Assert.Equal(12, _allMonths.OfSummaryType(PeriodType.MonthlySummary).Count());
         }
 
         [Fact]
         public void SummarizedBy_DailySummary()
         {
-            Assert.Empty(_allDays.SummarizedBy(SummaryType.DailySummary));
-            Assert.Empty(_allWeeks.SummarizedBy(SummaryType.DailySummary));
-            Assert.Empty(_allMonths.SummarizedBy(SummaryType.DailySummary));
+            Assert.Empty(_allDays.SummarizedBy(PeriodType.DailySummary));
+            Assert.Empty(_allWeeks.SummarizedBy(PeriodType.DailySummary));
+            Assert.Empty(_allMonths.SummarizedBy(PeriodType.DailySummary));
         }
 
         [Fact]
         public void SummarizedBy_WeeklySummary()
         {
-            Assert.Equal(365, _allDays.SummarizedBy(SummaryType.WeeklySummary).Count());
-            Assert.Empty(_allWeeks.SummarizedBy(SummaryType.WeeklySummary));
-            Assert.Empty(_allMonths.SummarizedBy(SummaryType.WeeklySummary));
+            Assert.Equal(365, _allDays.SummarizedBy(PeriodType.WeeklySummary).Count());
+            Assert.Empty(_allWeeks.SummarizedBy(PeriodType.WeeklySummary));
+            Assert.Empty(_allMonths.SummarizedBy(PeriodType.WeeklySummary));
         }
 
         [Fact]
         public void SummarizedBy_MonthlySummary()
         {
-            Assert.Empty(_allDays.SummarizedBy(SummaryType.MonthlySummary));
-            Assert.Equal(52, _allWeeks.SummarizedBy(SummaryType.MonthlySummary).Count());
-            Assert.Empty(_allMonths.SummarizedBy(SummaryType.MonthlySummary));
+            Assert.Empty(_allDays.SummarizedBy(PeriodType.MonthlySummary));
+            Assert.Equal(52, _allWeeks.SummarizedBy(PeriodType.MonthlySummary).Count());
+            Assert.Empty(_allMonths.SummarizedBy(PeriodType.MonthlySummary));
         }
 
         public static IEnumerable<object[]> SummarizedBy_SpecificSummary_Inputs()

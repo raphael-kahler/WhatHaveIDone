@@ -7,22 +7,77 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <ListView x:Name="Summaries"
+        <Grid.RowDefinitions>
+            <RowDefinition MaxHeight="40" MinHeight="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Margin="5,0">
+            <Button Content="&lt;"
+                    Visibility="{Binding BiggerSummaryTypeVisibility, Mode=OneWay}"
+                    Click="ShowBiggerSummaries"
+                    FontSize="14"
+                    Padding="10,2"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Left"/>
+            <Label Content="{Binding MainSummaryType.Name, Mode=OneWay}"
+                   HorizontalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              Margin="5,0">
+            <Button Content="&gt;"
+                    Visibility="{Binding SmallerSummaryTypeVisibility, Mode=OneWay}"
+                    Click="ShowSmallerSummaries"
+                    FontSize="14"
+                    Padding="10,2"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Right"/>
+            <Label Content="{Binding NextSummaryType.Name, Mode=OneWay}"
+                   HorizontalAlignment="Center"/>
+        </Grid>
+        <ListView x:Name="SummaryListView"
+                  Grid.Row="1" Grid.Column="0"
+                  HorizontalContentAlignment="Stretch"
                   ItemsSource="{Binding Summaries}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="5">
-                            <TextBlock Text="{Binding Type}"/>
-                            <TextBlock Text=" ("/>
-                            <TextBlock Text="{Binding Period.StartTime}"/>
-                            <TextBlock Text=" - "/>
-                            <TextBlock Text="{Binding Period.EndTime}"/>
-                            <TextBlock Text=")"/>
-                        </StackPanel>                    
-                        <TextBlock Text="{Binding Content}"/>
-                    </StackPanel>
+                    <Border BorderThickness="1"
+                            BorderBrush="Gray">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="4">
+                            <Grid>
+                                <TextBlock Text="{Binding Period.FormatString}"/>
+                                <Button Content="..."
+                                        Padding="4,0"
+                                        Visibility="Visible"
+                                        HorizontalAlignment="Right"/>
+                            </Grid>
+                            <TextBlock Text="{Binding Content}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView x:Name="SummarizedSummaryListView"
+                  Grid.Row="1" Grid.Column="1"
+                  HorizontalContentAlignment="Stretch"
+                  ItemsSource="{Binding SummarizedSummaries}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="1"
+                            BorderBrush="Gray">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="2">
+                            <TextBlock Text="{Binding Period.FormatString}"/>
+                            <TextBlock Text="{Binding Content}"/>
+                        </StackPanel>
+                    </Border>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -11,7 +11,7 @@ namespace Whid.Domain.Dates
         /// </summary>
         /// <param name="date">The date to check.</param>
         /// <returns>True if the date is within the DateRange, false otherwise.</returns>
-        public static bool IncludesDate(this IDateRange dateRange, DateTime date) =>
+        public static bool IncludesDate(this DateRange dateRange, DateTime date) =>
             dateRange.StartTime <= date && date < dateRange.EndTime.AddDays(1);
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Whid.Domain.Dates
         /// </summary>
         /// <param name="dateRange">The date range to check.</param>
         /// <returns>True if the specified date range is within the DateRange, false otherwise.</returns>
-        public static bool IncludesDateRange(this IDateRange dateRange, IDateRange other) =>
+        public static bool IncludesDateRange(this DateRange dateRange, DateRange other) =>
             dateRange.IncludesDate(other.StartTime) && dateRange.IncludesDate(other.EndTime);
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Whid.Domain.Dates
         /// </summary>
         /// <param name="dateRange">The date range to check.</param>
         /// <returns>True if the specified date range is at least partially within the DateRange, false otherwise.</returns>
-        public static bool PartiallyIncludesDateRange(this IDateRange dateRange, IDateRange other) =>
+        public static bool PartiallyIncludesDateRange(this DateRange dateRange, DateRange other) =>
             other.GetDuration() <= dateRange.GetDuration() && (dateRange.IncludesDate(other.StartTime) || dateRange.IncludesDate(other.EndTime));
     }
 }

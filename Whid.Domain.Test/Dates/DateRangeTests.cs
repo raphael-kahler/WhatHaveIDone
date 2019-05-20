@@ -53,7 +53,7 @@ namespace Whid.Domain.Test.Dates
 
         [Theory]
         [MemberData(nameof(IncludesDateRange_SingleDayRange_Inputs))]
-        public void IncludesDateRange_SingleDayRange_CheckIsCorrect(IDateRange dateRange, bool shouldBeIncluded)
+        public void IncludesDateRange_SingleDayRange_CheckIsCorrect(DateRange dateRange, bool shouldBeIncluded)
         {
             DateRange sut = new Date(year: 1000, month: 1, day: 1).RangeFromDays(1);
             Assert.Equal(shouldBeIncluded, sut.IncludesDateRange(dateRange));
@@ -74,7 +74,7 @@ namespace Whid.Domain.Test.Dates
 
         [Theory]
         [MemberData(nameof(PartiallyIncludesDateRange_SingleDayRange_Inputs))]
-        public void PartiallyIncludesDateRange_SingleDayRange_CheckIsCorrect(IDateRange dateRange, bool shouldBeIncluded)
+        public void PartiallyIncludesDateRange_SingleDayRange_CheckIsCorrect(DateRange dateRange, bool shouldBeIncluded)
         {
             DateRange sut = new Date(year: 1000, month: 1, day: 1).RangeFromDays(2);
             Assert.Equal(shouldBeIncluded, sut.PartiallyIncludesDateRange(dateRange));

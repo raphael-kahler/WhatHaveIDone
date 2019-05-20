@@ -6,7 +6,7 @@ namespace Whid.Domain.Dates
     /// <summary>
     /// A date range that starts on a certain day and ends on a day on or after the starting day.
     /// </summary>
-    public sealed class DateRange : IDateRange, IEquatable<DateRange>
+    public sealed class DateRange : IEquatable<DateRange>
     {
         /// <summary>
         /// The starting day of the date range.
