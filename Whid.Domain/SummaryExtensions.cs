@@ -13,7 +13,7 @@ namespace Whid.Domain
         /// <param name="other">The specified other summary.</param>
         /// <returns>True if the current summary summarizes the specified other summary, false otherwise.</returns>
         public static bool Summarizes(this Summary summary, Summary other) =>
-            summary.Period.Type.Summarizes(other.Period.Type) && summary.Period.DateRange.PartiallyIncludesDateRange(other.Period.DateRange);
+            summary.Period.Type.EncompassesType(other.Period.Type) && summary.Period.DateRange.PartiallyIncludesDateRange(other.Period.DateRange);
 
         /// <summary>
         /// Filter a collection of summaries to include only those whose dates are at least partially included in the specified date range.
@@ -40,7 +40,7 @@ namespace Whid.Domain
         /// <param name="summaryType">The summary type that should summarize the summaries.</param>
         /// <returns>All summaries of the type which is summarized by the specified summary type.</returns>
         public static IEnumerable<Summary> SummarizedBy(this IEnumerable<Summary> summaries, PeriodType summaryType) =>
-            summaries.Where(summary => summaryType.Summarizes(summary.Period.Type));
+            summaries.Where(summary => summaryType.EncompassesType(summary.Period.Type));
 
         /// <summary>
         /// Filter a collection of summaries to include only those which are summarized by the specified summary.

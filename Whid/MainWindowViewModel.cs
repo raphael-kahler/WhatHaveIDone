@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Whid.Domain;
@@ -11,7 +10,6 @@ namespace Whid
 {
     internal class MainWindowViewModel : BaseViewModel
     {
-        private PeriodOrdering _periodOrdering;
         private ISummaryService _service;
 
         private PeriodType mainSummaryType;
@@ -21,13 +19,6 @@ namespace Whid
             set => SetProperty(ref mainSummaryType, value);
         }
 
-        private PeriodType nextSummaryType;
-        public PeriodType NextSummaryType
-        {
-            get => nextSummaryType;
-            set => SetProperty(ref nextSummaryType, value);
-        }
-
         private ObservableCollection<SummaryModel> summaries;
         public ObservableCollection<SummaryModel> Summaries
         {
@@ -35,11 +26,11 @@ namespace Whid
             set => SetProperty(ref summaries, value);
         }
 
-        private ObservableCollection<SummaryModel> summarizedSummaries;
-        public ObservableCollection<SummaryModel> SummarizedSummaries
+        private ObservableCollection<SummaryModel> encompassedSummaries;
+        public ObservableCollection<SummaryModel> EncompassedSummaries
         {
-            get => summarizedSummaries;
-            set => SetProperty(ref summarizedSummaries, value);
+            get => encompassedSummaries;
+            set => SetProperty(ref encompassedSummaries, value);
         }
 
         private SummaryModel selectedSummary;
@@ -51,10 +42,10 @@ namespace Whid
                 bool wasSet = SetProperty(ref selectedSummary, value);
                 if (wasSet && null != selectedSummary)
                 {
-                    SummarizedSummaries
+                    EncompassedSummaries
                         .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
 
-                    FirstHighlightedSummary = SummarizedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
+                    FirstHighlightedSummary = EncompassedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
                 }
             }
         }
@@ -83,10 +74,9 @@ namespace Whid
         public MainWindowViewModel(ISummaryService service)
         {
             _service = service;
-            _periodOrdering = new PeriodOrdering(new List<PeriodTypeEnum> { PeriodTypeEnum.Day, PeriodTypeEnum.Week, PeriodTypeEnum.Month });
 
-            ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => _periodOrdering.SummarizesOthers(NextSummaryType.Type));
-            ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => _periodOrdering.SummarizedByOthers(MainSummaryType.Type));
+            ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => MainSummaryType.Encompasses.EncompassesOthers);
+            ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => MainSummaryType.IsEncompassedByOthers);
 
             ShowSummaries(PeriodTypeEnum.Month);
         }
@@ -94,20 +84,19 @@ namespace Whid
         private void ShowSummaries(PeriodTypeEnum type)
         {
             MainSummaryType = PeriodType.FromTypeEnum(type);
-            NextSummaryType = PeriodType.FromTypeEnum(_periodOrdering.GetSummarizedType(type));
 
             BiggerSummaryTypeVisibility = ShowBiggerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
             SmallerSummaryTypeVisibility = ShowSmallerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
 
             var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
             Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => new SummaryModel { Summary = s }));
-            SummarizedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(NextSummaryType).Select(s => new SummaryModel { Summary = s }));
+            EncompassedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType.Encompasses).Select(s => new SummaryModel { Summary = s }));
         }
 
         public RelayCommand ShowSmallerSummariesCommand { get; }
         private void ShowSmallerSummaries()
         {
-            ShowSummaries(NextSummaryType.Type);
+            ShowSummaries(MainSummaryType.Encompasses.Type);
             ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
             ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }
@@ -115,7 +104,7 @@ namespace Whid
         public RelayCommand ShowBiggerSummariesCommand { get; }
         private void ShowBiggerSummaries()
         {
-            ShowSummaries(_periodOrdering.GetSummarizingType(MainSummaryType.Type));
+            ShowSummaries(MainSummaryType.EncompassedBy.Type);
             ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
             ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }

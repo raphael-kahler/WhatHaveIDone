@@ -17,12 +17,12 @@ namespace Whid.Domain
         }
 
         public static Summary DailySummary(Date date, string content) =>
-            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.DailySummary, date.SingleDayRange()), content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Day), date.SingleDayRange()), content);
 
         public static Summary WeeklySummary(Date startDate, string content) =>
-            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.WeeklySummary, startDate.RangeFromWeeks(1)), content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Week), startDate.RangeFromWeeks(1)), content);
 
         public static Summary MonthlySummary(Month month, string content) =>
-            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.MonthlySummary, month.SingleMonthRange()), content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Month), month.SingleMonthRange()), content);
     }
 }

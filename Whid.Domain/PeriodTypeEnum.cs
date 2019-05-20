@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Whid.Domain
+﻿namespace Whid.Domain
 {
     public enum PeriodTypeEnum
     {

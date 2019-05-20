@@ -11,11 +11,6 @@ namespace Whid.Domain
     public sealed class PeriodType : IEquatable<PeriodType>
     {
         /// <summary>
-        /// The ordering of the summary.A type summarizes any type that has a lower ordering number.
-        /// </summary>
-        private int OrderingNumber { get; }
-
-        /// <summary>
         /// The name of the summary.
         /// </summary>
         public string Name { get; }
@@ -24,13 +19,41 @@ namespace Whid.Domain
 
         private Func<DateRange, string> DateFormat { get; }
 
-        private PeriodType(PeriodTypeEnum type, int orderingNumger, string name, Func<DateRange, string> dateFormat)
+        public PeriodType Encompasses { get; private set; }
+        public PeriodType EncompassedBy { get; private set; }
+
+        public bool EncompassesOthers => null != Encompasses;
+        public bool IsEncompassedByOthers => null != EncompassedBy;
+
+        private void SetToEncompass(PeriodType other)
+        {
+            Encompasses = other;
+            if (null != other)
+            {
+                other.EncompassedBy = this;
+            }
+        }
+
+        static PeriodType()
+        {
+            // Define ordering of period types.
+            WeeklySummary.SetToEncompass(DailySummary);
+            MonthlySummary.SetToEncompass(WeeklySummary);
+        }
+
+        private PeriodType(string name, PeriodTypeEnum type, Func<DateRange, string> dateFormat)
         {
             Type = type;
             Name = name;
             DateFormat = dateFormat;
-            OrderingNumber = orderingNumger;
         }
+
+        private static PeriodType DailySummary { get; } = 
+            new PeriodType("Daily Summary", PeriodTypeEnum.Day, dateRange => dateRange.StartTime.ToString("d MMMM yyyy"));
+        private static PeriodType WeeklySummary { get; } = 
+            new PeriodType("Weekly Summary", PeriodTypeEnum.Week, dateRange => dateRange.StartTime.ToString("d MMMM yyyy") + " - " + dateRange.EndTime.ToString("d MMMM yyyy"));
+        private static PeriodType MonthlySummary { get; } = 
+            new PeriodType("Monthly Summary", PeriodTypeEnum.Month, dateRange => dateRange.StartTime.ToString("MMMM yyyy"));
 
         public static PeriodType FromTypeEnum(PeriodTypeEnum typeEnum)
         {
@@ -43,20 +66,15 @@ namespace Whid.Domain
             }
         }
 
-        public static PeriodType DailySummary { get; } = new PeriodType(PeriodTypeEnum.Day, 1, "Daily Summary", dateRange => dateRange.StartTime.ToString("d MMMM yyyy"));
-        public static PeriodType WeeklySummary { get; } = new PeriodType(PeriodTypeEnum.Week, 2, "Weekly Summary", dateRange => dateRange.StartTime.ToString("d MMMM yyyy") + " - " + dateRange.EndTime.ToString("d MMMM yyyy"));
-        public static PeriodType MonthlySummary { get; } = new PeriodType(PeriodTypeEnum.Month, 3, "Monthly Summary", dateRange => dateRange.StartTime.ToString("MMMM yyyy"));
-
         public string FormatDateRange(DateRange dateRange) => DateFormat(dateRange);
-
 
         /// <summary>
         /// Check if the summary type directly summarizes the specified other summary type.
         /// </summary>
         /// <param name="other">The other summary type.</param>
         /// <returns>True if the summary type directly summarizes the specified summary type. False otherwise.</returns>
-        public bool Summarizes(PeriodType other) =>
-            OrderingNumber - 1 == other.OrderingNumber;
+        public bool EncompassesType(PeriodType other) =>
+            other == Encompasses;
 
         /// <summary>
         /// Check if the summary type summarizes the specified other type, either directly or indirectly.
@@ -64,8 +82,10 @@ namespace Whid.Domain
         /// </summary>
         /// <param name="other">The other summary type.</param>
         /// <returns>True if the summary type summarizes the specified summary type. False otherwise.</returns>
-        public bool SummarizesRecursively(PeriodType other) =>
-            OrderingNumber > other.OrderingNumber;
+        public bool EncompassesTypeRecursively(PeriodType other) =>
+            null == Encompasses ? false :
+            other == Encompasses ? true :
+            Encompasses.EncompassesTypeRecursively(other);
 
 
         #region Equality and Hashcode methods
@@ -76,25 +96,4 @@ namespace Whid.Domain
         public override int GetHashCode() => Name.GetHashCode();
         #endregion
     }
-
-    //public sealed class DailySummary : PeriodType
-    //{
-    //    protected override int OrderingNumber => 1;
-    //    public override string Name => "Daily summary";
-    //    public override string FormatDateRange(DateRange dateRange) => dateRange.StartTime.ToString("d");
-    //}
-
-    //public sealed class WeeklySummary : PeriodType
-    //{
-    //    protected override int OrderingNumber => 2;
-    //    public override string Name => "Weekly summary";
-    //    public override string FormatDateRange(DateRange dateRange) => dateRange.StartTime.ToString("d");
-    //}
-
-    //public sealed class MonthlySummary : PeriodType
-    //{
-    //    protected override int OrderingNumber => 3;
-    //    public override string Name => "Monthly summary";
-    //    public override string FormatDateRange(DateRange dateRange) => dateRange.StartTime.ToString("d");
-    //}
 }
