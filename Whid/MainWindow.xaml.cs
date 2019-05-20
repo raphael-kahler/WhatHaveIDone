@@ -21,16 +21,6 @@ namespace Whid
             DataContext = _viewModel = new MainWindowViewModel(new DbSummaryService(@"D:\temp\whid.db"));
         }
 
-        private void ShowBiggerSummaries(object sender, RoutedEventArgs e)
-        {
-            _viewModel.ShowBiggerSummaries();
-        }
-
-        private void ShowSmallerSummaries(object sender, RoutedEventArgs e)
-        {
-            _viewModel.ShowSmallerSummaries();
-        }
-
         private void BringSelectionIntoView(object sender, SelectionChangedEventArgs e)
         {
             Selector selector = sender as Selector;

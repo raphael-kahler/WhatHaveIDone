@@ -48,7 +48,7 @@
               Margin="5,0">
             <Button Content="&lt;"
                     Visibility="{Binding BiggerSummaryTypeVisibility, Mode=OneWay}"
-                    Click="ShowBiggerSummaries"
+                    Command="{Binding ShowBiggerSummariesCommand}"
                     FontSize="14"
                     Padding="10,2"
                     VerticalAlignment="Center"
@@ -61,7 +61,7 @@
               Margin="5,0">
             <Button Content="&gt;"
                     Visibility="{Binding SmallerSummaryTypeVisibility, Mode=OneWay}"
-                    Click="ShowSmallerSummaries"
+                    Command="{Binding ShowSmallerSummariesCommand}"
                     FontSize="14"
                     Padding="10,2"
                     VerticalAlignment="Center"

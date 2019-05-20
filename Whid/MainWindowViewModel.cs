@@ -5,7 +5,7 @@ using System.Windows;
 using Whid.Domain;
 using Whid.Framework;
 using Whid.Functional;
-using Whid.ViewModels;
+using Whid.Helpers;
 
 namespace Whid
 {
@@ -85,6 +85,9 @@ namespace Whid
             _service = service;
             _periodOrdering = new PeriodOrdering(new List<PeriodTypeEnum> { PeriodTypeEnum.Day, PeriodTypeEnum.Week, PeriodTypeEnum.Month });
 
+            ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => _periodOrdering.SummarizesOthers(NextSummaryType.Type));
+            ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => _periodOrdering.SummarizedByOthers(MainSummaryType.Type));
+
             ShowSummaries(PeriodTypeEnum.Month);
         }
 
@@ -93,22 +96,28 @@ namespace Whid
             MainSummaryType = PeriodType.FromTypeEnum(type);
             NextSummaryType = PeriodType.FromTypeEnum(_periodOrdering.GetSummarizedType(type));
 
-            BiggerSummaryTypeVisibility = _periodOrdering.SummarizedByOthers(MainSummaryType.Type) ? Visibility.Visible : Visibility.Hidden;
-            SmallerSummaryTypeVisibility = _periodOrdering.SummarizesOthers(NextSummaryType.Type) ? Visibility.Visible : Visibility.Hidden;
+            BiggerSummaryTypeVisibility = ShowBiggerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
+            SmallerSummaryTypeVisibility = ShowSmallerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
 
             var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
             Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => new SummaryModel { Summary = s }));
             SummarizedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(NextSummaryType).Select(s => new SummaryModel { Summary = s }));
         }
 
-        internal void ShowSmallerSummaries()
+        public RelayCommand ShowSmallerSummariesCommand { get; }
+        private void ShowSmallerSummaries()
         {
             ShowSummaries(NextSummaryType.Type);
+            ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
+            ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }
 
-        internal void ShowBiggerSummaries()
+        public RelayCommand ShowBiggerSummariesCommand { get; }
+        private void ShowBiggerSummaries()
         {
             ShowSummaries(_periodOrdering.GetSummarizingType(MainSummaryType.Type));
+            ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
+            ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }
     }
 }

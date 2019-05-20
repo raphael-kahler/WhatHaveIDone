@@ -1,5 +1,5 @@
 ﻿using Whid.Domain;
-using Whid.ViewModels;
+using Whid.Helpers;
 
 namespace Whid
 {
