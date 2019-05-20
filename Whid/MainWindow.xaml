@@ -6,6 +6,24 @@
         xmlns:local="clr-namespace:Whid"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate x:Key="SummaryViewTemplate">
+            <Border BorderThickness="1"
+                            BorderBrush="Gray">
+                <StackPanel Orientation="Vertical"
+                                    Margin="4">
+                    <Grid>
+                        <TextBlock Text="{Binding Period.FormatString}"/>
+                        <Button Content="..."
+                                        Padding="4,0"
+                                        Visibility="Visible"
+                                        HorizontalAlignment="Right"/>
+                    </Grid>
+                    <TextBlock Text="{Binding Content}"/>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="40" MinHeight="40"/>
@@ -44,42 +62,12 @@
         <ListView x:Name="SummaryListView"
                   Grid.Row="1" Grid.Column="0"
                   HorizontalContentAlignment="Stretch"
-                  ItemsSource="{Binding Summaries}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="1"
-                            BorderBrush="Gray">
-                        <StackPanel Orientation="Vertical"
-                                    Margin="4">
-                            <Grid>
-                                <TextBlock Text="{Binding Period.FormatString}"/>
-                                <Button Content="..."
-                                        Padding="4,0"
-                                        Visibility="Visible"
-                                        HorizontalAlignment="Right"/>
-                            </Grid>
-                            <TextBlock Text="{Binding Content}"/>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                  ItemTemplate="{StaticResource SummaryViewTemplate}"
+                  ItemsSource="{Binding Summaries}"/>
         <ListView x:Name="SummarizedSummaryListView"
                   Grid.Row="1" Grid.Column="1"
                   HorizontalContentAlignment="Stretch"
-                  ItemsSource="{Binding SummarizedSummaries}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderThickness="1"
-                            BorderBrush="Gray">
-                        <StackPanel Orientation="Vertical"
-                                    Margin="2">
-                            <TextBlock Text="{Binding Period.FormatString}"/>
-                            <TextBlock Text="{Binding Content}"/>
-                        </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                  ItemTemplate="{StaticResource SummaryViewTemplate}"
+                  ItemsSource="{Binding SummarizedSummaries}"/>
     </Grid>
 </Window>
