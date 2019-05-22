@@ -3,10 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        d:DataContext="{d:DesignInstance designtime:DesignSummaries, IsDesignTimeCreatable=True}"
+        xmlns:designtime="clr-namespace:Whid.DesignTime"
         xmlns:local="clr-namespace:Whid"
+        xmlns:converters="clr-namespace:Whid.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
+        <converters:HiddenOnFalse x:Key="HiddenOnFalse"/>
+        <converters:HiddenOnTrue x:Key="HiddenOnTrue"/>
+        <converters:CollapsedOnFalse x:Key="CollapsedOnFalse"/>
+        <converters:CollapsedOnTrue x:Key="CollapsedOnTrue"/>
+        <Style x:Key="SummaryEditButton"
+               TargetType="Button">
+            <Setter Property="Width" Value="27"/>
+            <Setter Property="Padding" Value="0,2"/>
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
         <Style x:Key="SummaryViewStyle"
                TargetType="{x:Type Border}">
             <Style.Triggers>
@@ -23,13 +37,25 @@
                             Orientation="Vertical"
                             Margin="4">
                     <Grid>
-                        <TextBlock Text="{Binding Summary.Period.FormatString}"/>
-                        <Button Content="..."
-                                Padding="4,0"
-                                Visibility="Visible"
-                                HorizontalAlignment="Right"/>
+                        <TextBlock Text="{Binding Period.FormatString}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right">
+                            <Button Content="✎"
+                                    Command="{Binding StartEditCommand}"
+                                    Style="{StaticResource SummaryEditButton}"
+                                    Visibility="{Binding Highlighted, Converter={StaticResource CollapsedOnFalse}}"/>
+                            <Button Content="✕"
+                                    Command="{Binding QuitEditCommand}"
+                                    Style="{StaticResource SummaryEditButton}"
+                                    Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
+                            <Button Content="✓"
+                                    Command="{Binding SaveCommand}"
+                                    Style="{StaticResource SummaryEditButton}"
+                                    Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
+                        </StackPanel>
                     </Grid>
-                    <TextBlock Text="{Binding Summary.Content}"/>
+                    <TextBlock Text="{Binding Content}" Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnTrue}}"/>
+                    <TextBox Text="{Binding Content}" Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
                 </StackPanel>
             </Border>
         </DataTemplate>
@@ -37,14 +63,24 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MaxHeight="40" MinHeight="40"/>
+            <RowDefinition MaxHeight="40" MinHeight="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0"
-              Grid.Column="0"
+        <Grid Grid.Row="0" Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <Menu IsMainMenu="True" Name="Menu1">
+                <MenuItem Header="Hello"
+                          Name="Test">
+                </MenuItem>
+                <MenuItem Header="There"/>
+            </Menu>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0"
               Margin="5,0">
             <Button Content="&lt;"
                     Visibility="{Binding BiggerSummaryTypeVisibility, Mode=OneWay}"
@@ -56,8 +92,7 @@
             <Label Content="{Binding MainSummaryType.Name, Mode=OneWay}"
                    HorizontalAlignment="Center"/>
         </Grid>
-        <Grid Grid.Row="0"
-              Grid.Column="1"
+        <Grid Grid.Row="1" Grid.Column="1"
               Margin="5,0">
             <Button Content="&gt;"
                     Visibility="{Binding SmallerSummaryTypeVisibility, Mode=OneWay}"
@@ -70,13 +105,13 @@
                    HorizontalAlignment="Center"/>
         </Grid>
         <ListView x:Name="SummaryListView"
-                  Grid.Row="1" Grid.Column="0"
+                  Grid.Row="2" Grid.Column="0"
                   HorizontalContentAlignment="Stretch"
                   ItemsSource="{Binding Summaries}"
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
                   SelectedItem="{Binding SelectedSummary}"/>
         <ListView x:Name="EncompassedSummaryListView"
-                  Grid.Row="1" Grid.Column="1"
+                  Grid.Row="2" Grid.Column="1"
                   HorizontalContentAlignment="Stretch"
                   IsSynchronizedWithCurrentItem="True"
                   SelectionChanged="BringSelectionIntoView"

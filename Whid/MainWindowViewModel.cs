@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using Whid.Domain;
+using Whid.Domain.Dates;
 using Whid.Framework;
 using Whid.Functional;
 using Whid.Helpers;
@@ -39,13 +40,21 @@ namespace Whid
             get => selectedSummary;
             set
             {
+                var previousSummary = selectedSummary;
                 bool wasSet = SetProperty(ref selectedSummary, value);
                 if (wasSet && null != selectedSummary)
                 {
-                    EncompassedSummaries
-                        .ForEach(s => s.Highlighted = selectedSummary.Summary.Summarizes(s.Summary));
+                    if (null != previousSummary)
+                    {
+                        previousSummary.Highlighted = false;
+                    }
 
-                    FirstHighlightedSummary = EncompassedSummaries.First(s => selectedSummary.Summary.Summarizes(s.Summary));
+                    SelectedSummary.Highlighted = true;
+
+                    EncompassedSummaries
+                        .ForEach(s => s.Highlighted = selectedSummary.Period.DateRange.PartiallyIncludesDateRange(s.Period.DateRange));
+
+                    FirstHighlightedSummary = EncompassedSummaries.First(s => selectedSummary.Period.DateRange.PartiallyIncludesDateRange(s.Period.DateRange));
                 }
             }
         }
@@ -89,8 +98,8 @@ namespace Whid
             SmallerSummaryTypeVisibility = ShowSmallerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
 
             var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
-            Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => new SummaryModel { Summary = s }));
-            EncompassedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType.Encompasses).Select(s => new SummaryModel { Summary = s }));
+            Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => s.ToViewModel(_service)));
+            EncompassedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType.Encompasses).Select(s => s.ToViewModel(_service)));
         }
 
         public RelayCommand ShowSmallerSummariesCommand { get; }

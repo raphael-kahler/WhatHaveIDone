@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -18,7 +18,9 @@ namespace Whid
         {
             InitializeComponent();
 
-            DataContext = _viewModel = new MainWindowViewModel(new DbSummaryService(@"D:\temp\whid.db"));
+            var service = new DbSummaryService(@"D:\temp\whid.db");
+
+            DataContext = _viewModel = new MainWindowViewModel(service);
         }
 
         private void BringSelectionIntoView(object sender, SelectionChangedEventArgs e)
