@@ -31,13 +31,14 @@
         </Style>
         <DataTemplate x:Key="SummaryViewTemplate">
             <Border BorderThickness="1"
+                    x:Name="SummaryBorder"
                     Style="{StaticResource SummaryViewStyle}"
                     BorderBrush="Gray">
-                <StackPanel 
-                            Orientation="Vertical"
+                <StackPanel Orientation="Vertical"
                             Margin="4">
                     <Grid>
-                        <TextBlock Text="{Binding Period.FormatString}"/>
+                        <TextBlock Text="{Binding Period.FormatString}"
+                                   FontWeight="Bold"/>
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right">
                             <Button Content="✎"
@@ -58,8 +59,17 @@
                                     Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
                         </StackPanel>
                     </Grid>
-                    <TextBlock Text="{Binding Content}" Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnTrue}}"/>
-                    <TextBox Text="{Binding Content}" Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
+                    <Grid>
+                        <TextBlock Text="{Binding Content}"
+                                    TextWrapping="Wrap"
+                                    Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnTrue}}"/>
+                        <TextBox Text="{Binding Content}"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    AcceptsTab="True"
+                                    SpellCheck.IsEnabled="True"
+                                    Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
+                    </Grid>
                 </StackPanel>
             </Border>
         </DataTemplate>
