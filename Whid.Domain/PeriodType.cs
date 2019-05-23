@@ -19,10 +19,23 @@ namespace Whid.Domain
 
         private Func<DateRange, string> DateFormat { get; }
 
+        /// <summary>
+        /// A period type, if the current period type encompasses that other period type.
+        /// </summary>
         public PeriodType Encompasses { get; private set; }
+        /// <summary>
+        /// A period type, if the current period type is encompassed by that other period type.
+        /// </summary>
         public PeriodType EncompassedBy { get; private set; }
 
+        /// <summary>
+        /// True if the period type encompasses any other period type.
+        /// </summary>
         public bool EncompassesOthers => null != Encompasses;
+
+        /// <summary>
+        /// True if there is any other period type that encompasses this period type.
+        /// </summary>
         public bool IsEncompassedByOthers => null != EncompassedBy;
 
         private void SetToEncompass(PeriodType other)
@@ -47,6 +60,9 @@ namespace Whid.Domain
             Name = name;
             DateFormat = dateFormat;
         }
+
+        public static PeriodType Smallest => DailySummary;
+        public static PeriodType Largest => MonthlySummary;
 
         private static PeriodType DailySummary { get; } = 
             new PeriodType("Daily Summary", PeriodTypeEnum.Day, dateRange => dateRange.StartTime.ToString("d MMMM yyyy"));
@@ -87,6 +103,15 @@ namespace Whid.Domain
             other == Encompasses ? true :
             Encompasses.EncompassesTypeRecursively(other);
 
+        public static IEnumerable<PeriodType> AllPeriodTypes()
+        {
+            var periodType = Smallest;
+            while (periodType != null)
+            {
+                yield return periodType;
+                periodType = periodType.EncompassedBy;
+            }
+        }
 
         #region Equality and Hashcode methods
         public override bool Equals(object obj) => Equals(obj as PeriodType);

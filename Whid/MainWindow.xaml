@@ -65,6 +65,7 @@
             <RowDefinition MaxHeight="40" MinHeight="40"/>
             <RowDefinition MaxHeight="40" MinHeight="40"/>
             <RowDefinition/>
+            <RowDefinition MaxHeight="30" MinHeight="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -118,5 +119,14 @@
                   SelectedItem="{Binding FirstHighlightedSummary}"
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
                   ItemsSource="{Binding EncompassedSummaries}"/>
+        <StackPanel Grid.Row="3" Grid.Column="0"
+                    Orientation="Horizontal">
+            <ComboBox ItemsSource="{Binding PeriodTypes}"
+                      DisplayMemberPath="Name"
+                      SelectedItem="{Binding SummaryCreation.PeriodType}"/>
+            <DatePicker SelectedDate="{Binding SummaryCreation.PeriodTime}" />
+            <Button Content="Add"
+                    HorizontalAlignment="Right"/>
+        </StackPanel>
     </Grid>
 </Window>

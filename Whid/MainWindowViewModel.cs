@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Whid.Domain;
@@ -12,6 +14,15 @@ namespace Whid
     internal class MainWindowViewModel : BaseViewModel
     {
         private ISummaryService _service;
+
+        public List<PeriodType> PeriodTypes { get; set; } = PeriodType.AllPeriodTypes().ToList();
+
+        private SummaryCreationModel summaryCreation;
+        public SummaryCreationModel SummaryCreation
+        {
+            get => summaryCreation;
+            set => SetProperty(ref summaryCreation, value);
+        }
 
         private PeriodType mainSummaryType;
         public PeriodType MainSummaryType
@@ -84,6 +95,7 @@ namespace Whid
         {
             _service = service;
 
+            SummaryCreation = new SummaryCreationModel { PeriodTime = DateTime.UtcNow, PeriodType = PeriodType.FromTypeEnum(PeriodTypeEnum.Day) };
             ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => MainSummaryType.Encompasses.EncompassesOthers);
             ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => MainSummaryType.IsEncompassedByOthers);
 

@@ -11,6 +11,8 @@ namespace Whid.DesignTime
         public IEnumerable<SummaryModel> Summaries { get; set; }
         public IEnumerable<SummaryModel> EncompassedSummaries { get; set; }
 
+        public List<PeriodType> PeriodTypes { get; set; } = PeriodType.AllPeriodTypes().ToList();
+
         public DesignSummaries()
         {
             var startDate = new Date(1739, 1, 1);
