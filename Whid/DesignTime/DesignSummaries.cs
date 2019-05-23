@@ -20,17 +20,17 @@ namespace Whid.DesignTime
             var allDays = Enumerable
                 .Range(1, 365)
                 .Select(day => Summary.DailySummary(startDate.AddDays(day - 1), $"What I did on day {day}"))
-                .Select(s => s.ToViewModel(null));
+                .Select(s => s.ToViewModel(null, null));
 
             var allWeeks = Enumerable
                 .Range(1, 52)
                 .Select(week => Summary.WeeklySummary(startDate.AddDays(7 * (week - 1)), $"What I did in week {week}"))
-                .Select(s => s.ToViewModel(null));
+                .Select(s => s.ToViewModel(null, null));
 
             var allMonths = Enumerable
                 .Range(1, 12)
                 .Select(month => Summary.MonthlySummary(((Month)startDate).AddMonths(month - 1), $"What I did in month {month}"))
-                .Select(s => s.ToViewModel(null));
+                .Select(s => s.ToViewModel(null, null));
 
             Summaries = allMonths;
             EncompassedSummaries = allWeeks;

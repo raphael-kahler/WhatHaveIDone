@@ -8,6 +8,8 @@ namespace Whid
     public class SummaryModel : BaseViewModel
     {
         private ISummaryService _service;
+        private Action<SummaryModel> _removeSummary;
+        private string originalContent;
 
         private Guid id;
         public Guid Id
@@ -22,8 +24,7 @@ namespace Whid
             get => period;
             set => SetProperty(ref period, value);
         }
-
-        private string originalContent;
+        
 
         private string content;
         public string Content
@@ -48,13 +49,16 @@ namespace Whid
 
         public RelayCommand StartEditCommand { get; }
         public RelayCommand QuitEditCommand { get; }
+        public RelayCommand DeleteCommand { get; }
         public RelayCommand SaveCommand { get; }
 
-        public SummaryModel(ISummaryService service)
+        public SummaryModel(ISummaryService service, Action<SummaryModel> removeSummary)
         {
+            _removeSummary = removeSummary;
             _service = service;
             StartEditCommand = new RelayCommand(SwitchToEditMode);
             QuitEditCommand = new RelayCommand(() => QuitEditMode(revert: true));
+            DeleteCommand = new RelayCommand(DeleteSummary);
             SaveCommand = new RelayCommand(Save);
         }
 
@@ -79,6 +83,11 @@ namespace Whid
             }
             EditMode = false;
             Highlighted = true;
+        }
+
+        private void DeleteSummary()
+        {
+            _removeSummary(this);
         }
     }
 }

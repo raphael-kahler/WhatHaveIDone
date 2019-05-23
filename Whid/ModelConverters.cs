@@ -1,13 +1,14 @@
-﻿using Whid.Domain;
+﻿using System;
+using Whid.Domain;
 using Whid.Framework;
 
 namespace Whid
 {
     internal static class ModelConverters
     {
-        public static SummaryModel ToViewModel(this Summary summary, ISummaryService service)
+        public static SummaryModel ToViewModel(this Summary summary, ISummaryService service, Action<SummaryModel> removeSummary)
         {
-            return new SummaryModel(service)
+            return new SummaryModel(service, removeSummary)
             {
                 Id = summary.Id,
                 Content = summary.Content,

@@ -44,6 +44,10 @@
                                     Command="{Binding StartEditCommand}"
                                     Style="{StaticResource SummaryEditButton}"
                                     Visibility="{Binding Highlighted, Converter={StaticResource CollapsedOnFalse}}"/>
+                            <Button Content="🗑"
+                                    Command="{Binding DeleteCommand}"
+                                    Style="{StaticResource SummaryEditButton}"
+                                    Visibility="{Binding EditMode, Converter={StaticResource CollapsedOnFalse}}"/>
                             <Button Content="✕"
                                     Command="{Binding QuitEditCommand}"
                                     Style="{StaticResource SummaryEditButton}"
@@ -120,13 +124,19 @@
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
                   ItemsSource="{Binding EncompassedSummaries}"/>
         <StackPanel Grid.Row="3" Grid.Column="0"
+                    Grid.ColumnSpan="2"
                     Orientation="Horizontal">
+            <Label Content="Summary type:"/>
             <ComboBox ItemsSource="{Binding PeriodTypes}"
                       DisplayMemberPath="Name"
                       SelectedItem="{Binding SummaryCreation.PeriodType}"/>
+            <Label Content="Start date:"
+                   Margin="10,0,0,0"/>
             <DatePicker SelectedDate="{Binding SummaryCreation.PeriodTime}" />
-            <Button Content="Add"
-                    HorizontalAlignment="Right"/>
+            <Button Command="{Binding CreateNewSummaryCommand}"
+                    Padding="7,0"
+                    Margin="15,0,0,0"
+                    Content="Add new"/>
         </StackPanel>
     </Grid>
 </Window>

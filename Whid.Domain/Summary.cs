@@ -13,7 +13,7 @@ namespace Whid.Domain
         {
             Id = id;
             Period = period ?? throw new ArgumentNullException(nameof(period));
-            Content = content ?? throw new ArgumentNullException(nameof(content));
+            Content = content;
         }
 
         public static Summary DailySummary(Date date, string content) =>
@@ -24,5 +24,16 @@ namespace Whid.Domain
 
         public static Summary MonthlySummary(Month month, string content) =>
             new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Month), month.SingleMonthRange()), content);
+
+        public static Summary FromPeriodType(PeriodType periodType, DateTime startDate, string content)
+        {
+            switch (periodType.Type)
+            {
+                case PeriodTypeEnum.Day: return DailySummary((Date)startDate, content);
+                case PeriodTypeEnum.Week: return WeeklySummary((Date)startDate, content);
+                case PeriodTypeEnum.Month: return MonthlySummary((Month)startDate, content);
+                default: throw new ArgumentOutOfRangeException(nameof(periodType), periodType, $"Speficied period type \"{periodType}\" is not a valid type for constructing a summary.");
+            }
+        }
     }
 }
