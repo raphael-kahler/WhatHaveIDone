@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using Whid.AppDetails;
-using Whid.Framework.DB;
+using Whid.Framework;
 
 namespace Whid
 {
@@ -13,15 +12,9 @@ namespace Whid
     {
         private MainWindowViewModel _viewModel;
 
-        public MainWindow()
+        public MainWindow(ISummaryService service)
         {
             InitializeComponent();
-
-            var dbName = "data.db";
-            var dbPath = new AppFileHelper().GetApplicationFilePath(dbName);
-
-            var service = new DbSummaryService(dbPath);
-
             DataContext = _viewModel = new MainWindowViewModel(service);
         }
 

@@ -106,6 +106,9 @@ namespace Whid
         private void ShowSummaries(PeriodTypeEnum type)
         {
             MainSummaryType = PeriodType.FromTypeEnum(type);
+            ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
+            ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
+
 
             BiggerSummaryTypeVisibility = ShowBiggerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
             SmallerSummaryTypeVisibility = ShowSmallerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
@@ -119,16 +122,12 @@ namespace Whid
         private void ShowSmallerSummaries()
         {
             ShowSummaries(MainSummaryType.Encompasses.Type);
-            ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
-            ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }
 
         public RelayCommand ShowBiggerSummariesCommand { get; }
         private void ShowBiggerSummaries()
         {
             ShowSummaries(MainSummaryType.EncompassedBy.Type);
-            ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
-            ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
         }
 
         public RelayCommand CreateNewSummaryCommand { get; }
