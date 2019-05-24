@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Whid.Framework;
@@ -16,6 +17,11 @@ namespace Whid
         {
             InitializeComponent();
             DataContext = _viewModel = new MainWindowViewModel(service);
+        }
+
+        private void QuitApplication(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void BringSelectionIntoView(object sender, SelectionChangedEventArgs e)

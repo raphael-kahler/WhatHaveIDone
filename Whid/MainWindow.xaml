@@ -76,7 +76,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="40" MinHeight="40"/>
+            <RowDefinition MaxHeight="20" MinHeight="20"/>
             <RowDefinition MaxHeight="40" MinHeight="40"/>
             <RowDefinition/>
             <RowDefinition MaxHeight="30" MinHeight="30"/>
@@ -87,11 +87,15 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.Column="0"
               Grid.ColumnSpan="2">
-            <Menu IsMainMenu="True" Name="Menu1">
-                <MenuItem Header="Hello"
-                          Name="Test">
+            <Menu IsMainMenu="True">
+                <MenuItem Header="File">
+                    <MenuItem Header="Exit"
+                              Click="QuitApplication"
+                              InputGestureText="Alt+F4"/>
                 </MenuItem>
-                <MenuItem Header="There"/>
+                <MenuItem Header="Help">
+                    <MenuItem Header="About"/>
+                </MenuItem>
             </Menu>
         </Grid>
 
