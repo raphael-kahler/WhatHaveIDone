@@ -95,7 +95,7 @@ namespace Whid
         {
             _service = service;
 
-            SummaryCreation = new SummaryCreationModel { PeriodTime = DateTime.UtcNow, PeriodType = PeriodType.FromTypeEnum(PeriodTypeEnum.Day) };
+            SummaryCreation = new SummaryCreationModel { PeriodTime = DateTime.Now, PeriodType = PeriodType.FromTypeEnum(PeriodTypeEnum.Day) };
             ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => MainSummaryType.Encompasses?.EncompassesOthers ?? false);
             ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => MainSummaryType.IsEncompassedByOthers);
             CreateNewSummaryCommand = new RelayCommand(CreateNewSummary);
