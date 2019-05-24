@@ -32,5 +32,11 @@ namespace Whid
                 listView.ScrollIntoView(selector.SelectedItem);
             }
         }
+
+        private void ShowAboutPage(object sender, EventArgs e)
+        {
+            var aboutPage = new AboutWindow();
+            aboutPage.Show();
+        }
     }
 }

@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:Whid"
         xmlns:converters="clr-namespace:Whid.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Whid" Height="450" Width="800">
     <Window.Resources>
         <converters:HiddenOnFalse x:Key="HiddenOnFalse"/>
         <converters:HiddenOnTrue x:Key="HiddenOnTrue"/>
@@ -94,7 +94,8 @@
                               InputGestureText="Alt+F4"/>
                 </MenuItem>
                 <MenuItem Header="Help">
-                    <MenuItem Header="About"/>
+                    <MenuItem Header="About"
+                              Click="ShowAboutPage"/>
                 </MenuItem>
             </Menu>
         </Grid>

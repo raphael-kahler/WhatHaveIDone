@@ -1,0 +1,41 @@
+﻿<Window x:Class="Whid.AboutWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Whid"
+             mc:Ignorable="d" 
+             Title="About Whid"
+             Height="250" Width="400">
+    <Window.Resources>
+        <Style x:Key="Title"
+               TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        <Style x:Key="Text"
+               TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="5">
+        <StackPanel>
+            <TextBlock Text="Whid - What Have I done?"
+                       Style="{StaticResource Title}"/>
+            <TextBlock Text="An application to keep track of and summarize accomplishments across different time spans."
+                       Style="{StaticResource Text}"/>
+            <Separator Margin="0,10"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Project url:"
+                           Margin="0,0,10,0"/>
+                <TextBlock>
+                    <Hyperlink RequestNavigate="NavigateToHyperlink"
+                               NavigateUri="https://github.com/raphael-kahler/WhatHaveIDone/">
+                        https://github.com/raphael-kahler/WhatHaveIDone
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
