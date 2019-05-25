@@ -133,9 +133,8 @@
         <ListView x:Name="EncompassedSummaryListView"
                   Grid.Row="2" Grid.Column="1"
                   HorizontalContentAlignment="Stretch"
-                  IsSynchronizedWithCurrentItem="True"
                   SelectionChanged="BringSelectionIntoView"
-                  SelectedItem="{Binding FirstHighlightedSummary}"
+                  SelectedItem="{Binding SelectedEncompassedSummary}"
                   ItemTemplate="{StaticResource SummaryViewTemplate}"
                   ItemsSource="{Binding EncompassedSummaries}"/>
         <StackPanel Grid.Row="3" Grid.Column="0"

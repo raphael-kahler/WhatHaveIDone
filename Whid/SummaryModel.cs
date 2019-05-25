@@ -1,5 +1,6 @@
 ﻿using System;
 using Whid.Domain;
+using Whid.Domain.Dates;
 using Whid.Framework;
 using Whid.Helpers;
 
@@ -89,5 +90,8 @@ namespace Whid
         {
             _removeSummary(this);
         }
+
+        public bool PartiallyIncludes(SummaryModel other) =>
+            Period.DateRange.PartiallyIncludesDateRange(other.Period.DateRange);
     }
 }

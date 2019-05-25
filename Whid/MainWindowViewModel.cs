@@ -4,9 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Whid.Domain;
-using Whid.Domain.Dates;
 using Whid.Framework;
-using Whid.Functional;
 using Whid.Helpers;
 
 namespace Whid
@@ -14,6 +12,7 @@ namespace Whid
     internal class MainWindowViewModel : BaseViewModel
     {
         private ISummaryService _service;
+        private List<SummaryModel> _highLightedEncompassedSummaries = new List<SummaryModel>();
 
         public List<PeriodType> PeriodTypes { get; set; } = PeriodType.AllPeriodTypes().ToList();
 
@@ -60,21 +59,40 @@ namespace Whid
                         previousSummary.Highlighted = false;
                     }
 
-                    SelectedSummary.Highlighted = true;
+                    selectedSummary.Highlighted = true;
 
-                    EncompassedSummaries
-                        .ForEach(s => s.Highlighted = selectedSummary.Period.DateRange.PartiallyIncludesDateRange(s.Period.DateRange));
+                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = false);
+                    _highLightedEncompassedSummaries = EncompassedSummaries.Where(s => selectedSummary.PartiallyIncludes(s)).ToList();
 
-                    FirstHighlightedSummary = EncompassedSummaries.FirstOrDefault(s => selectedSummary.Period.DateRange.PartiallyIncludesDateRange(s.Period.DateRange));
+                    SelectedEncompassedSummary = _highLightedEncompassedSummaries.FirstOrDefault();
+                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = true);
                 }
             }
         }
 
-        private SummaryModel firstHighlightedSummary;
-        public SummaryModel FirstHighlightedSummary
+        private SummaryModel selectedEncompassedSummary;
+        public SummaryModel SelectedEncompassedSummary
         {
-            get => firstHighlightedSummary;
-            set => SetProperty(ref firstHighlightedSummary, value);
+            get => selectedEncompassedSummary;
+            set
+            {
+                var previousSummary = selectedEncompassedSummary;
+                bool wasSet = SetProperty(ref selectedEncompassedSummary, value);
+                if (wasSet)
+                {
+                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = false);
+
+                    if (null != previousSummary)
+                    {
+                        previousSummary.Highlighted = false;
+                    }
+
+                    if (null != selectedEncompassedSummary)
+                    {
+                        selectedEncompassedSummary.Highlighted = true;
+                    }
+                }
+            }
         }
 
         private Visibility biggerSummaryTypeVisibility;
