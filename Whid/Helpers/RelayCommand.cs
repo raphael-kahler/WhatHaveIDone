@@ -7,8 +7,8 @@ namespace Whid.Helpers
     {
         public event EventHandler CanExecuteChanged = delegate { };
 
-        private Action _targetExecuteMethod;
-        private Func<bool> _targetCanExecuteMethod;
+        private readonly Action _targetExecuteMethod;
+        private readonly Func<bool> _targetCanExecuteMethod;
 
         public RelayCommand(Action targetExecuteMethod)
         {

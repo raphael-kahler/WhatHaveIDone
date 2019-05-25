@@ -8,8 +8,8 @@ namespace Whid.Views.Main
 {
     public class SummaryModel : BaseViewModel
     {
-        private ISummaryService _service;
-        private Action<SummaryModel> _removeSummary;
+        private readonly ISummaryService _service;
+        private readonly Action<SummaryModel> _removeSummary;
         private string originalContent;
 
         private Guid id;

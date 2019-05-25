@@ -9,7 +9,7 @@ namespace Whid.Framework
 {
     public class InMemorySummaryService : ISummaryService
     {
-        private static Dictionary<Guid, Summary> _store = new Dictionary<Guid, Summary>();
+        private static readonly Dictionary<Guid, Summary> _store = new Dictionary<Guid, Summary>();
 
         static InMemorySummaryService()
         {

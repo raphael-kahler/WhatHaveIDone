@@ -12,8 +12,8 @@ namespace Whid.Views.Main
 {
     internal class MainWindowViewModel : BaseViewModel
     {
-        private ISummaryService _service;
-        private HighlightedSummaryList _highlightedEncompassedSummaries = new HighlightedSummaryList();
+        private readonly ISummaryService _service;
+        private readonly HighlightedSummaryList _highlightedEncompassedSummaries = new HighlightedSummaryList();
 
         public RelayCommand ShowSmallerSummariesCommand { get; }
         public RelayCommand ShowBiggerSummariesCommand { get; }

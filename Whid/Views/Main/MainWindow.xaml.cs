@@ -12,7 +12,7 @@ namespace Whid.Views.Main
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel _viewModel;
+        private readonly MainWindowViewModel _viewModel;
 
         public MainWindow(ISummaryService service)
         {
