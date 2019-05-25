@@ -45,5 +45,13 @@ namespace Whid.Functional
         public static T Reduce<T>(this Option<T> option, Func<T> whenNone) =>
             option is Some<T> some ? some : whenNone();
 
+        /// <summary>
+        /// Reduce an option to its value if it is some. Otherwise if it is none, return the default value for the type.
+        /// </summary>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        /// <param name="option">The optional value.</param>
+        /// <returns>The option value if it is some, or the default value of the type if the option is none.</returns>
+        public static T ReduceToDefault<T>(this Option<T> option) =>
+            option is Some<T> some ? some : default(T);
     }
 }

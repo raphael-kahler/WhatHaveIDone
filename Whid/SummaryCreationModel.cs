@@ -19,5 +19,8 @@ namespace Whid
             get => periodTime;
             set => SetProperty(ref periodTime, value);
         }
+
+        public Summary ConvertToSummary() =>
+            Summary.FromPeriodType(PeriodType, PeriodTime, string.Empty);
     }
 }

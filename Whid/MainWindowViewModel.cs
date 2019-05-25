@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Whid.Domain;
 using Whid.Framework;
+using Whid.Functional;
 using Whid.Helpers;
 
 namespace Whid
@@ -11,7 +12,23 @@ namespace Whid
     internal class MainWindowViewModel : BaseViewModel
     {
         private ISummaryService _service;
-        private List<SummaryModel> _highLightedEncompassedSummaries = new List<SummaryModel>();
+        private HighlightedSummaryList _highlightedEncompassedSummaries = new HighlightedSummaryList();
+
+        public RelayCommand ShowSmallerSummariesCommand { get; }
+        public RelayCommand ShowBiggerSummariesCommand { get; }
+        public RelayCommand CreateNewSummaryCommand { get; }
+
+        public MainWindowViewModel(ISummaryService service)
+        {
+            _service = service;
+
+            SummaryCreation = new SummaryCreationModel { PeriodTime = DateTime.Now, PeriodType = PeriodType.FromTypeEnum(PeriodTypeEnum.Day) };
+            ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => MainSummaryType.Encompasses?.EncompassesOthers ?? false);
+            ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => MainSummaryType.IsEncompassedByOthers);
+            CreateNewSummaryCommand = new RelayCommand(CreateNewSummary);
+
+            ShowSummaries(PeriodTypeEnum.Month);
+        }
 
         public List<PeriodType> PeriodTypes { get; set; } = PeriodType.AllPeriodTypes().ToList();
 
@@ -49,23 +66,11 @@ namespace Whid
             get => selectedSummary;
             set
             {
-                var previousSummary = selectedSummary;
-                bool wasSet = SetProperty(ref selectedSummary, value);
-                if (wasSet && null != selectedSummary)
-                {
-                    if (null != previousSummary)
-                    {
-                        previousSummary.Highlighted = false;
-                    }
+                selectedSummary.HighlightSummary(false);
+                SetProperty(ref selectedSummary, value);
+                selectedSummary.HighlightSummary(true);
 
-                    selectedSummary.Highlighted = true;
-
-                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = false);
-                    _highLightedEncompassedSummaries = EncompassedSummaries.Where(s => selectedSummary.PartiallyIncludes(s)).ToList();
-
-                    SelectedEncompassedSummary = _highLightedEncompassedSummaries.FirstOrDefault();
-                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = true);
-                }
+                HighlightEncompassedSummaries(selectedSummary);
             }
         }
 
@@ -75,35 +80,21 @@ namespace Whid
             get => selectedEncompassedSummary;
             set
             {
-                var previousSummary = selectedEncompassedSummary;
-                bool wasSet = SetProperty(ref selectedEncompassedSummary, value);
-                if (wasSet)
-                {
-                    _highLightedEncompassedSummaries.ForEach(s => s.Highlighted = false);
+                selectedEncompassedSummary.HighlightSummary(false);
+                SetProperty(ref selectedEncompassedSummary, value);
+                selectedEncompassedSummary.HighlightSummary(true);
 
-                    if (null != previousSummary)
-                    {
-                        previousSummary.Highlighted = false;
-                    }
-
-                    if (null != selectedEncompassedSummary)
-                    {
-                        selectedEncompassedSummary.Highlighted = true;
-                    }
-                }
+                _highlightedEncompassedSummaries.ReplaceSummariesWith(selectedEncompassedSummary);
             }
         }
 
-        public MainWindowViewModel(ISummaryService service)
+        private void HighlightEncompassedSummaries(SummaryModel summary)
         {
-            _service = service;
+            _highlightedEncompassedSummaries.ReplaceSummariesWith(
+                EncompassedSummaries.Where(s => summary?.PartiallyIncludes(s) ?? false));
 
-            SummaryCreation = new SummaryCreationModel { PeriodTime = DateTime.Now, PeriodType = PeriodType.FromTypeEnum(PeriodTypeEnum.Day) };
-            ShowSmallerSummariesCommand = new RelayCommand(ShowSmallerSummaries, () => MainSummaryType.Encompasses?.EncompassesOthers ?? false);
-            ShowBiggerSummariesCommand = new RelayCommand(ShowBiggerSummaries, () => MainSummaryType.IsEncompassedByOthers);
-            CreateNewSummaryCommand = new RelayCommand(CreateNewSummary);
-
-            ShowSummaries(PeriodTypeEnum.Month);
+            selectedEncompassedSummary = _highlightedEncompassedSummaries.FirstSummary().ReduceToDefault();
+            OnPropertyChanged(nameof(SelectedEncompassedSummary));
         }
 
         private void ShowSummaries(PeriodTypeEnum type)
@@ -112,27 +103,28 @@ namespace Whid
             ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
             ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
 
-            var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
-            Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => s.ToViewModel(_service, DeleteSummary)));
-            EncompassedSummaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType.Encompasses).Select(s => s.ToViewModel(_service, DeleteSummary)));
+            Summaries = new ObservableCollection<SummaryModel>(GetSummariesOfType(MainSummaryType));
+            EncompassedSummaries = new ObservableCollection<SummaryModel>(GetSummariesOfType(MainSummaryType.Encompasses));
         }
 
-        public RelayCommand ShowSmallerSummariesCommand { get; }
-        private void ShowSmallerSummaries()
-        {
+        private List<SummaryModel> GetSummariesOfType(PeriodType type) =>
+            _service
+                .GetSummaries()
+                .OfSummaryType(type)
+                .OrderBy(s => s.Period.DateRange.StartTime)
+                .Select(s => s.ToViewModel(_service, DeleteSummary))
+                .ToList();
+
+
+        private void ShowSmallerSummaries() =>
             ShowSummaries(MainSummaryType.Encompasses.Type);
-        }
 
-        public RelayCommand ShowBiggerSummariesCommand { get; }
-        private void ShowBiggerSummaries()
-        {
+        private void ShowBiggerSummaries() =>
             ShowSummaries(MainSummaryType.EncompassedBy.Type);
-        }
 
-        public RelayCommand CreateNewSummaryCommand { get; }
         private void CreateNewSummary()
         {
-            var summary = Summary.FromPeriodType(SummaryCreation.PeriodType, SummaryCreation.PeriodTime, string.Empty);
+            var summary = SummaryCreation.ConvertToSummary();
             var createdSummary = _service.SaveSummary(summary);
             ShowSummaries(createdSummary.Period.Type.Type);
             SelectedSummary = Summaries.SingleOrDefault(s => s.Id == createdSummary.Id);
@@ -146,6 +138,11 @@ namespace Whid
             }
 
             _service.DeleteSummary(summary.Id);
+            RemoveSummaryFromView(summary);
+        }
+
+        private void RemoveSummaryFromView(SummaryModel summary)
+        {
             if (summary.Period.Type == MainSummaryType)
             {
                 Summaries.Remove(summary);
@@ -153,11 +150,6 @@ namespace Whid
             else
             {
                 EncompassedSummaries.Remove(summary);
-            }
-
-            if (summary == SelectedSummary)
-            {
-                SelectedSummary = null;
             }
         }
     }
