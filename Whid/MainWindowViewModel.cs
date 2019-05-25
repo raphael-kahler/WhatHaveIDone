@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using Whid.Domain;
 using Whid.Framework;
 using Whid.Helpers;
@@ -95,20 +94,6 @@ namespace Whid
             }
         }
 
-        private Visibility biggerSummaryTypeVisibility;
-        public Visibility BiggerSummaryTypeVisibility
-        {
-            get => biggerSummaryTypeVisibility;
-            set => SetProperty(ref biggerSummaryTypeVisibility, value);
-        }
-
-        private Visibility smallerSummaryTypeVisibility;
-        public Visibility SmallerSummaryTypeVisibility
-        {
-            get => smallerSummaryTypeVisibility;
-            set => SetProperty(ref smallerSummaryTypeVisibility, value);
-        }
-
         public MainWindowViewModel(ISummaryService service)
         {
             _service = service;
@@ -126,10 +111,6 @@ namespace Whid
             MainSummaryType = PeriodType.FromTypeEnum(type);
             ShowBiggerSummariesCommand.RaiseCanExecuteChanged();
             ShowSmallerSummariesCommand.RaiseCanExecuteChanged();
-
-
-            BiggerSummaryTypeVisibility = ShowBiggerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
-            SmallerSummaryTypeVisibility = ShowSmallerSummariesCommand.CanExecute(null) ? Visibility.Visible : Visibility.Hidden;
 
             var allSummaries = _service.GetSummaries().OrderBy(s => s.Period.DateRange.StartTime);
             Summaries = new ObservableCollection<SummaryModel>(allSummaries.OfSummaryType(MainSummaryType).Select(s => s.ToViewModel(_service, DeleteSummary)));
