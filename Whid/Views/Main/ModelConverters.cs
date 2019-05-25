@@ -2,7 +2,7 @@
 using Whid.Domain;
 using Whid.Framework;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     internal static class ModelConverters
     {

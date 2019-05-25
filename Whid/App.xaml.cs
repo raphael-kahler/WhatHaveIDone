@@ -4,6 +4,7 @@ using System.Windows;
 using Whid.AppDetails;
 using Whid.Framework;
 using Whid.Framework.DB;
+using Whid.Views.Main;
 
 namespace Whid
 {

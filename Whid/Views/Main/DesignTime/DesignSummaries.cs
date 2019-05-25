@@ -3,7 +3,7 @@ using System.Linq;
 using Whid.Domain;
 using Whid.Domain.Dates;
 
-namespace Whid.DesignTime
+namespace Whid.Views.Main.DesignTime
 {
     public class DesignSummaries
     {

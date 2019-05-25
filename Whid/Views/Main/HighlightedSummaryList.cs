@@ -2,7 +2,7 @@
 using System.Linq;
 using Whid.Functional;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     internal class HighlightedSummaryList
     {

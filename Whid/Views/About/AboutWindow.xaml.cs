@@ -2,7 +2,7 @@
 using System.Windows.Navigation;
 using Whid.Helpers;
 
-namespace Whid
+namespace Whid.Views.About
 {
     /// <summary>
     /// Interaction logic for AboutWindow.xaml

@@ -3,8 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Whid.Framework;
+using Whid.Views.About;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

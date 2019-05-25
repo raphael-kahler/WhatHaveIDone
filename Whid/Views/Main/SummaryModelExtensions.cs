@@ -1,4 +1,4 @@
-﻿namespace Whid
+﻿namespace Whid.Views.Main
 {
     internal static class SummaryModelExtensions
     {

@@ -6,8 +6,9 @@ using Whid.Domain;
 using Whid.Framework;
 using Whid.Functional;
 using Whid.Helpers;
+using Whid.Views.Main;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     internal class MainWindowViewModel : BaseViewModel
     {

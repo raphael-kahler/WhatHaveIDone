@@ -4,7 +4,7 @@ using Whid.Domain.Dates;
 using Whid.Framework;
 using Whid.Helpers;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     public class SummaryModel : BaseViewModel
     {
@@ -25,7 +25,6 @@ namespace Whid
             get => period;
             set => SetProperty(ref period, value);
         }
-        
 
         private string content;
         public string Content

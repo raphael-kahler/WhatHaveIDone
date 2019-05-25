@@ -2,7 +2,7 @@
 using Whid.Domain;
 using Whid.Helpers;
 
-namespace Whid
+namespace Whid.Views.Main
 {
     public class SummaryCreationModel : BaseViewModel
     {
