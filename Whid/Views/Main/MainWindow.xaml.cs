@@ -12,12 +12,10 @@ namespace Whid.Views.Main
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly MainWindowViewModel _viewModel;
-
         public MainWindow(ISummaryService service)
         {
             InitializeComponent();
-            DataContext = _viewModel = new MainWindowViewModel(service);
+            DataContext = new MainWindowViewModel(service);
         }
 
         private void QuitApplication(object sender, EventArgs e)

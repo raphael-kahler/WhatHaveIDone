@@ -13,7 +13,7 @@ namespace Whid.Functional
         /// <param name="map">The function to map the value to its result.</param>
         /// <returns>The mapped optional value if it was some, or none if it was none.</returns>
         public static Option<TResult> Map<T, TResult>(this Option<T> option, Func<T, TResult> map) =>
-            option is Some<T> some ? map(some) : (Option<TResult>)None.Value;
+            option is Some<T> some ? map(some) : Option<TResult>.None;
 
         /// <summary>
         /// Turn a value into an option so that it is some if it meets the predicate and none if it doesn't.
@@ -23,7 +23,7 @@ namespace Whid.Functional
         /// <param name="predicate">The predicate that returns true if the value is some and false if the value is none.</param>
         /// <returns>An optional value.</returns>
         public static Option<T> When<T>(this T value, Func<T, bool> predicate) =>
-            predicate(value) ? value : (Option<T>)None.Value;
+            predicate(value) ? value : Option<T>.None;
 
         /// <summary>
         /// Reduce an option to its value if it is some. Otherwise if it is none, return the specified value instead.

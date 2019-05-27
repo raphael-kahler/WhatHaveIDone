@@ -59,7 +59,7 @@ namespace Whid.Framework.DB
             var dbModel =_summaries.FindById(id);
             if (null == dbModel)
             {
-                return None.Value;
+                return Option.None;
             }
             return dbModel.ToDomainModel();
         }

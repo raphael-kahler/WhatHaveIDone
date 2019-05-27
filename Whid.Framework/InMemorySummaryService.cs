@@ -47,7 +47,7 @@ namespace Whid.Framework
             {
                 return summary;
             }
-            return None.Value;
+            return Option.None;
         }
 
         public Summary SaveSummary(Summary summary)

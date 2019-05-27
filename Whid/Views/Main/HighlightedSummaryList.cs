@@ -22,6 +22,6 @@ namespace Whid.Views.Main
             _summaries.ForEach(s => s.Highlighted = highlighted);
 
         public Option<SummaryModel> FirstSummary() =>
-            _summaries.FirstOrDefault();
+            _summaries.Any() ? _summaries.First() : Option<SummaryModel>.None;
     }
 }
