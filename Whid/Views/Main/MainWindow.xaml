@@ -17,15 +17,27 @@
         <converters:HiddenOnTrue x:Key="HiddenOnTrue"/>
         <converters:CollapsedOnFalse x:Key="CollapsedOnFalse"/>
         <converters:CollapsedOnTrue x:Key="CollapsedOnTrue"/>
-        <Style x:Key="WindowTitleButton"
+
+        <Style x:Key="MainMenu"
+               TargetType="Menu">
+            <Setter Property="Background" Value="{StaticResource bg_primary}"/>
+            <Setter Property="Foreground" Value="{StaticResource on_primary}"/>
+        </Style>
+        <Style x:Key="PrimaryButton"
                TargetType="Button">
             <Setter Property="Background" Value="{StaticResource bg_primary}"/>
+            <Setter Property="Foreground" Value="{StaticResource on_primary}"/>
+        </Style>
+        <Style x:Key="WindowTitleButton"
+               BasedOn="{StaticResource PrimaryButton}"
+               TargetType="Button">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Margin" Value="5,0,7,0"/>
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
         <Style x:Key="HideOnInactiveButton"
+               BasedOn="{StaticResource PrimaryButton}"
                TargetType="Button" >
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
@@ -40,15 +52,26 @@
             <Setter Property="Padding" Value="10,2"/>
             <Setter Property="Margin" Value="5,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="Background" Value="{StaticResource bg_primary}"/>
         </Style>
         <Style x:Key="SummaryEditButton"
+               BasedOn="{StaticResource PrimaryButton}"
                TargetType="Button">
             <Setter Property="Width" Value="27"/>
             <Setter Property="Padding" Value="0,2"/>
             <Setter Property="Margin" Value="4,0"/>
             <Setter Property="FontSize" Value="11"/>
+        </Style>
+        <Style x:Key="PrimaryBackgroundGrid"
+               TargetType="Grid">
+            <Setter Property="Background" Value="{StaticResource bg_primary_light}"/>
+        </Style>
+        <Style x:Key="WindowBorder"
+               TargetType="Border">
             <Setter Property="Background" Value="{StaticResource bg_primary}"/>
+        </Style>
+        <Style x:Key="ContentBorder"
+               TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource bg_primary_light}"/>
         </Style>
         <Style x:Key="SummaryViewStyle"
                TargetType="{x:Type Border}">
@@ -111,10 +134,10 @@
             GlassFrameThickness="0">
         </WindowChrome>
     </WindowChrome.WindowChrome>
-    <Border BorderThickness="0"
-            Background="{StaticResource bg_primary}">
+    <Border BorderThickness="0">
         <Border.Style>
-            <Style TargetType="{x:Type Border}">
+            <Style TargetType="Border" BasedOn="{StaticResource WindowBorder}">
+                <Setter Property="Background" Value="{StaticResource bg_primary}"/>
                 <Style.Triggers>
                     <!-- Add to avoid border disappearing when window is maximised -->
                     <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -131,17 +154,27 @@
         <DockPanel>
             <Border DockPanel.Dock="Top"
                     Padding="0,2"
-                    MouseLeftButtonDown="DragWindow"
-                    Background="{StaticResource bg_primary}">
+                    Style="{StaticResource WindowBorder}"
+                    MouseLeftButtonDown="DragWindow">
                 <Grid>
                     <Menu IsMainMenu="True"
-                          Background="{StaticResource bg_primary}"
+                          Style="{StaticResource MainMenu}"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center">
                         <MenuItem Header="File">
                             <MenuItem Header="Exit"
                                       Click="CloseWindow"
                                       InputGestureText="Alt+F4"/>
+                        </MenuItem>
+                        <MenuItem Header="View">
+                            <MenuItem Header="Color Scheme">
+                                <MenuItem Header="Green"
+                                          Tag="LightGreenIndigo"
+                                          Click="SelectColorScheme"/>
+                                <MenuItem Header="Brown"
+                                          Tag="BrownOrange"
+                                          Click="SelectColorScheme"/>
+                            </MenuItem>
                         </MenuItem>
                         <MenuItem Header="Help">
                             <MenuItem Header="About"
@@ -165,9 +198,9 @@
                 </Grid>
             </Border>
 
-            <StackPanel DockPanel.Dock="Bottom"
-                        Background="{StaticResource bg_primary_light}"
-                        Orientation="Horizontal">
+            <Border DockPanel.Dock="Bottom"
+                    Style="{StaticResource ContentBorder}">
+                <StackPanel Orientation="Horizontal">
                 <Label Content="Summary type:"/>
                 <ComboBox ItemsSource="{Binding PeriodTypes}"
                           DisplayMemberPath="Name"
@@ -180,11 +213,12 @@
                 <Button Command="{Binding CreateNewSummaryCommand}"
                         Padding="7,0"
                         Margin="15,0,0,0"
-                        Background="{StaticResource bg_primary}"
+                        Style="{StaticResource PrimaryButton}"
                         Content="Add new"/>
             </StackPanel>
+            </Border>
 
-            <Grid>
+            <Grid Style="{StaticResource PrimaryBackgroundGrid}">
                 <Grid.RowDefinitions>
                     <RowDefinition MaxHeight="40" MinHeight="40"/>
                     <RowDefinition/>
@@ -193,8 +227,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Row="0" Grid.Column="0"
-                      Background="{StaticResource bg_primary_light}">
+                <Grid Grid.Row="0" Grid.Column="0">
                     <Button Content="◀"
                             Style="{StaticResource SummaryTypePageButton}"
                             Command="{Binding ShowBiggerSummariesCommand}"
@@ -203,8 +236,7 @@
                            VerticalAlignment="Center"
                            HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Grid.Row="0" Grid.Column="1"
-                      Background="{StaticResource bg_primary_light}">
+                <Grid Grid.Row="0" Grid.Column="1">
                     <Button Content="▶"
                             Style="{StaticResource SummaryTypePageButton}"
                             Command="{Binding ShowSmallerSummariesCommand}"
@@ -228,7 +260,6 @@
                           ItemTemplate="{StaticResource SummaryViewTemplate}"
                           ItemsSource="{Binding EncompassedSummaries}"/>
             </Grid>
-
         </DockPanel>
     </Border>
 </Window>

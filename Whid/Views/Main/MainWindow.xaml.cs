@@ -78,5 +78,17 @@ namespace Whid.Views.Main
             Application.Current.Shutdown();
         }
 
+        public void SelectColorScheme(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem menuItem)
+            {
+                Application.Current.Resources.MergedDictionaries.Clear();
+                Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+                {
+                    Source = new Uri($@"Resources\ColorSchemes\Colors{menuItem.Tag}.xaml", UriKind.Relative)
+                });
+            }
+
+        }
     }
 }

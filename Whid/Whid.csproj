@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\ColorSchemes\ColorsBrownOrange.xaml" />
+    <None Remove="Resources\ColorSchemes\ColorsLightGreenIndigo.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
   </ItemGroup>
 
