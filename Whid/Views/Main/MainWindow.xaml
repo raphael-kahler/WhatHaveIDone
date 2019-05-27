@@ -8,12 +8,23 @@
         xmlns:local="clr-namespace:Whid"
         xmlns:converters="clr-namespace:Whid.Converters"
         mc:Ignorable="d"
-        Title="Whid" Height="450" Width="800">
+        WindowStyle="None"
+        ResizeMode="CanResize"
+        Title="Whid"
+        Height="450" Width="800">
     <Window.Resources>
         <converters:HiddenOnFalse x:Key="HiddenOnFalse"/>
         <converters:HiddenOnTrue x:Key="HiddenOnTrue"/>
         <converters:CollapsedOnFalse x:Key="CollapsedOnFalse"/>
         <converters:CollapsedOnTrue x:Key="CollapsedOnTrue"/>
+        <Style x:Key="WindowTitleButton"
+               TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource bg_primary}"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="5,0,7,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
         <Style x:Key="HideOnInactiveButton"
                TargetType="Button" >
             <Style.Triggers>
@@ -22,18 +33,28 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="SummaryTypePageButton"
+               TargetType="Button"
+               BasedOn="{StaticResource HideOnInactiveButton}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,2"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{StaticResource bg_primary}"/>
+        </Style>
         <Style x:Key="SummaryEditButton"
                TargetType="Button">
             <Setter Property="Width" Value="27"/>
             <Setter Property="Padding" Value="0,2"/>
             <Setter Property="Margin" Value="4,0"/>
             <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Background" Value="{StaticResource bg_primary}"/>
         </Style>
         <Style x:Key="SummaryViewStyle"
                TargetType="{x:Type Border}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Highlighted}" Value="true">
-                    <Setter Property="Background" Value="PapayaWhip"/>
+                    <Setter Property="Background" Value="{StaticResource bg_primary_light}"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -82,83 +103,132 @@
             </Border>
         </DataTemplate>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="20" MinHeight="20"/>
-            <RowDefinition MaxHeight="40" MinHeight="40"/>
-            <RowDefinition/>
-            <RowDefinition MaxHeight="30" MinHeight="30"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0"
-              Grid.ColumnSpan="2">
-            <Menu IsMainMenu="True">
-                <MenuItem Header="File">
-                    <MenuItem Header="Exit"
-                              Click="QuitApplication"
-                              InputGestureText="Alt+F4"/>
-                </MenuItem>
-                <MenuItem Header="Help">
-                    <MenuItem Header="About"
-                              Click="ShowAboutPage"/>
-                </MenuItem>
-            </Menu>
-        </Grid>
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="1"
+            CornerRadius ="0"
+            ResizeBorderThickness="4"
+            GlassFrameThickness="0">
+        </WindowChrome>
+    </WindowChrome.WindowChrome>
+    <Border BorderThickness="0"
+            Background="{StaticResource bg_primary}">
+        <Border.Style>
+            <Style TargetType="{x:Type Border}">
+                <Style.Triggers>
+                    <!-- Add to avoid border disappearing when window is maximised -->
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="Maximized">
+                        <Setter Property="Margin" Value="7"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="Normal">
+                        <Setter Property="Margin" Value="0"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+        <DockPanel>
+            <Border DockPanel.Dock="Top"
+                    Padding="0,2"
+                    MouseLeftButtonDown="DragWindow"
+                    Background="{StaticResource bg_primary}">
+                <Grid>
+                    <Menu IsMainMenu="True"
+                          Background="{StaticResource bg_primary}"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center">
+                        <MenuItem Header="File">
+                            <MenuItem Header="Exit"
+                                      Click="CloseWindow"
+                                      InputGestureText="Alt+F4"/>
+                        </MenuItem>
+                        <MenuItem Header="Help">
+                            <MenuItem Header="About"
+                                      Click="ShowAboutPage"/>
+                        </MenuItem>
+                    </Menu>
+                    <StackPanel Orientation="Horizontal"
+                                MouseDown="DragWindow"
+                                HorizontalAlignment="Right">
+                        <Button Content="🗕"
+                                Click="MinimizeWindow"
+                                Style="{StaticResource WindowTitleButton}"/>
+                        <Button Content="🗖"
+                                x:Name="MaximizeWindowButton"
+                                Click="MaximizeWindow"
+                                Style="{StaticResource WindowTitleButton}"/>
+                        <Button Content="🗙"
+                                Click="CloseWindow"
+                                Style="{StaticResource WindowTitleButton}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-        <Grid Grid.Row="1" Grid.Column="0"
-              Margin="5,0">
-            <Button Content="&lt;"
-                    Style="{StaticResource HideOnInactiveButton}"
-                    Command="{Binding ShowBiggerSummariesCommand}"
-                    FontSize="14"
-                    Padding="10,2"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left"/>
-            <Label Content="{Binding MainSummaryType.Name, Mode=OneWay}"
-                   HorizontalAlignment="Center"/>
-        </Grid>
-        <Grid Grid.Row="1" Grid.Column="1"
-              Margin="5,0">
-            <Button Content="&gt;"
-                    Style="{StaticResource HideOnInactiveButton}"
-                    Command="{Binding ShowSmallerSummariesCommand}"
-                    FontSize="14"
-                    Padding="10,2"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Right"/>
-            <Label Content="{Binding MainSummaryType.Encompasses.Name, Mode=OneWay}"
-                   HorizontalAlignment="Center"/>
-        </Grid>
-        <ListView x:Name="SummaryListView"
-                  Grid.Row="2" Grid.Column="0"
-                  HorizontalContentAlignment="Stretch"
-                  ItemsSource="{Binding Summaries}"
-                  ItemTemplate="{StaticResource SummaryViewTemplate}"
-                  SelectedItem="{Binding SelectedSummary}"/>
-        <ListView x:Name="EncompassedSummaryListView"
-                  Grid.Row="2" Grid.Column="1"
-                  HorizontalContentAlignment="Stretch"
-                  SelectionChanged="BringSelectionIntoView"
-                  SelectedItem="{Binding SelectedEncompassedSummary}"
-                  ItemTemplate="{StaticResource SummaryViewTemplate}"
-                  ItemsSource="{Binding EncompassedSummaries}"/>
-        <StackPanel Grid.Row="3" Grid.Column="0"
-                    Grid.ColumnSpan="2"
-                    Orientation="Horizontal">
-            <Label Content="Summary type:"/>
-            <ComboBox ItemsSource="{Binding PeriodTypes}"
-                      DisplayMemberPath="Name"
-                      SelectedItem="{Binding SummaryCreation.PeriodType}"/>
-            <Label Content="Start date:"
-                   Margin="10,0,0,0"/>
-            <DatePicker SelectedDate="{Binding SummaryCreation.PeriodTime}" />
-            <Button Command="{Binding CreateNewSummaryCommand}"
-                    Padding="7,0"
-                    Margin="15,0,0,0"
-                    Content="Add new"/>
-        </StackPanel>
-    </Grid>
+            <StackPanel DockPanel.Dock="Bottom"
+                        Background="{StaticResource bg_primary_light}"
+                        Orientation="Horizontal">
+                <Label Content="Summary type:"/>
+                <ComboBox ItemsSource="{Binding PeriodTypes}"
+                          DisplayMemberPath="Name"
+                          VerticalAlignment="Center"
+                          SelectedItem="{Binding SummaryCreation.PeriodType}"/>
+                <Label Content="Start date:"
+                       Margin="10,0,0,0"/>
+                <DatePicker SelectedDate="{Binding SummaryCreation.PeriodTime}"
+                            VerticalAlignment="Center"/>
+                <Button Command="{Binding CreateNewSummaryCommand}"
+                        Padding="7,0"
+                        Margin="15,0,0,0"
+                        Background="{StaticResource bg_primary}"
+                        Content="Add new"/>
+            </StackPanel>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MaxHeight="40" MinHeight="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0"
+                      Background="{StaticResource bg_primary_light}">
+                    <Button Content="◀"
+                            Style="{StaticResource SummaryTypePageButton}"
+                            Command="{Binding ShowBiggerSummariesCommand}"
+                            HorizontalAlignment="Left"/>
+                    <Label Content="{Binding MainSummaryType.Name, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1"
+                      Background="{StaticResource bg_primary_light}">
+                    <Button Content="▶"
+                            Style="{StaticResource SummaryTypePageButton}"
+                            Command="{Binding ShowSmallerSummariesCommand}"
+                            HorizontalAlignment="Right"/>
+                    <Label Content="{Binding MainSummaryType.Encompasses.Name, Mode=OneWay}"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+                </Grid>
+
+                <ListView x:Name="SummaryListView"
+                          Grid.Row="1" Grid.Column="0"
+                          HorizontalContentAlignment="Stretch"
+                          ItemsSource="{Binding Summaries}"
+                          ItemTemplate="{StaticResource SummaryViewTemplate}"
+                          SelectedItem="{Binding SelectedSummary}"/>
+                <ListView x:Name="EncompassedSummaryListView"
+                          Grid.Row="1" Grid.Column="1"
+                          HorizontalContentAlignment="Stretch"
+                          SelectionChanged="BringSelectionIntoView"
+                          SelectedItem="{Binding SelectedEncompassedSummary}"
+                          ItemTemplate="{StaticResource SummaryViewTemplate}"
+                          ItemsSource="{Binding EncompassedSummaries}"/>
+            </Grid>
+
+        </DockPanel>
+    </Border>
 </Window>
