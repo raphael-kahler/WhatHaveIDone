@@ -21,3 +21,8 @@ steps:
     includePreviewVersions: true
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish pipeline artifact'
+  inputs:
+    artifactName: 'drop'
+    targetPath: 'Whid/bin/Release/netcoreapp3.0'
