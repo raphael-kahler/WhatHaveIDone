@@ -20,7 +20,7 @@ namespace Whid.Domain
             new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Day), date.SingleDayRange()), content);
 
         public static Summary WeeklySummary(Date startDate, string content) =>
-            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Week), startDate.RangeFromWeeks(1)), content);
+            new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Week), startDate.FirstDayOfWeek().RangeFromWeeks(1)), content);
 
         public static Summary MonthlySummary(Month month, string content) =>
             new Summary(Guid.Empty, new SummaryPeriod(PeriodType.FromTypeEnum(PeriodTypeEnum.Month), month.SingleMonthRange()), content);

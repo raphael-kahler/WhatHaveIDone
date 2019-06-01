@@ -1,4 +1,6 @@
-﻿namespace Whid.Domain.Dates
+﻿using System;
+
+namespace Whid.Domain.Dates
 {
     public static class DateExtensions
     {
@@ -29,5 +31,14 @@
         /// <returns>The created DateRange.</returns>
         public static DateRange SingleDayRange(this Date date) =>
             new DateRange(date, date);
+
+        /// <summary>
+        /// Return a DateTime that is the start of the week which contains the specified date time.
+        /// Weeks start on Sunday and end on Saturday.
+        /// </summary>
+        /// <param name="dateTime">The date time that is contained in the week.</param>
+        /// <returns>The start time of the week that contains the specified date time.</returns>
+        public static Date FirstDayOfWeek(this Date date) =>
+            date.AddDays(-(int)((DateTime)date).DayOfWeek);
     }
 }

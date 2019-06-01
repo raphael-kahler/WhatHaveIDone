@@ -115,9 +115,11 @@ namespace Whid.Domain.Test
         public static IEnumerable<object[]> SummarizedBy_SpecificSummary_Inputs()
         {
             yield return new object[] { Summary.DailySummary(new Date(2019, 1, 1), "content"), 0, 0, 0 };
-            yield return new object[] { Summary.WeeklySummary(new Date(2019, 1, 1), "content"), 7, 0, 0 };
+            yield return new object[] { Summary.WeeklySummary(new Date(2019, 1, 1), "content"), 5, 0, 0 }; // 1st is Tuesday of 2019, so it summarizes all but Sunday and Monday of previous year
+            yield return new object[] { Summary.WeeklySummary(new Date(2019, 2, 1), "content"), 7, 0, 0 };
             yield return new object[] { Summary.MonthlySummary(new Month(2019, 1), "content"), 0, 5, 0 };
-            yield return new object[] { Summary.WeeklySummary(new Date(2020, 1, 1), "content"), 0, 0, 0 };
+            yield return new object[] { Summary.WeeklySummary(new Date(2020, 1, 1), "content"), 3, 0, 0 }; // 1st is Wednesday of 2020, so this week contains three days of 2019
+            yield return new object[] { Summary.WeeklySummary(new Date(2020, 2, 1), "content"), 0, 0, 0 };
             yield return new object[] { Summary.MonthlySummary(new Month(2020, 1), "content"), 0, 0, 0 };
         }
 
